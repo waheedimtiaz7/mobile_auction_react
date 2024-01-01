@@ -1,0 +1,2 @@
+export const stripePublishableKey = 'pk_test_51O1AC3JtNj6yyfnslOR2yTFEKXpRyyHVcDWkVINLqxRCOFDJ85zuABfZAIfqMCnCoErQbtupMDFiQ2kMR39ZNwmF00RSxY47LU';
+export const stripeBackendUrl = 'https://api.stripe.com/v1'; 
