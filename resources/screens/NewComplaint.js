@@ -43,7 +43,7 @@ const NewComplaint = ({ navigation }) => {
         subject:subject,
         details:details
       }
-      createComplaint(data)
+      createComplaint(data, navigation)
 
   }
   return (

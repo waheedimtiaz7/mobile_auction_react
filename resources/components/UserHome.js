@@ -82,7 +82,7 @@ const UserHome = () => {
             backgroundColor: "white",
             borderRadius: 25,
             marginLeft: 12,
-            width: 260,
+            width: 290,
             height: 150,
             alignItems:"center"
           }}>
@@ -109,7 +109,7 @@ const UserHome = () => {
                 <Text
                   style={{
                     fontWeight: "bold",
-                    fontSize: 25,
+                    fontSize: 22,
                     
                   }}
                 >

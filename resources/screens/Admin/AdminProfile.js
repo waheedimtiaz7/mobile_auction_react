@@ -1,24 +1,19 @@
-import React, { useEffect, useState } from "react";
-import {
-  Image,
-  ImageBackground,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-
+import { StyleSheet, Text, View } from "react-native";
+import React, { useState,useEffect } from "react";
+import { Image } from "react-native";
 import { TextInput } from "react-native-paper";
+import { TouchableOpacity, ImageBackground } from "react-native";
+import { updateEmployee, futureUseIntent } from '../../Utils/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ImagePicker from "expo-image-picker";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AdminProfile = ({ navigation }) => {
-  const [email, setEmail] = useState(null);
-  const [phone, setPhone] = useState(null);
+  const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [fname, setfname] = useState("");
   const [lname, setlname] = useState("");
+  const [address, setAddress] = useState("");
   const [image, setImage] = useState(null);
   const [dbImage, setDbImage] = useState(null);
 
@@ -32,8 +27,8 @@ const AdminProfile = ({ navigation }) => {
 
 
     if (!result.canceled) {
-      console.log(result.assets)
-      setImage(result.assets[0].uri);
+      setImage(result.assets[0]);
+      setDbImage(result.assets[0].uri);
     }
   };
 
@@ -47,6 +42,7 @@ const AdminProfile = ({ navigation }) => {
         setfname(user.fname);
         setlname(user.lname);
         setPhone(user.phone);
+        setAddress(user.address);
         setDbImage(user.picture);
         setEmail(user.email);
         
@@ -56,15 +52,23 @@ const AdminProfile = ({ navigation }) => {
   }, []);
 
   const update = async () => {
-    await updateDoc(washingtonRef, {
+    if(fname==''){
+      alert('First name is required')
+    }if(lname==''){
+      alert('Last name is required')
+    }if(email==''){
+      alert('Email is required')
+    }if(phone==''){
+      alert('Phone is required')
+    }
+    const data = {
       fname: fname,
       lname: lname,
       phone: phone,
-      email: email,
-      picture: dbImage,
-    }).then(() => {
-      alert("Profile Updated Successfully.");
-    });
+      address: address,
+      email: email
+    }
+    await updateEmployee(image, data, navigation);
   };
 
   return (
@@ -114,6 +118,13 @@ const AdminProfile = ({ navigation }) => {
             style={styles.inputField}
             value={email}
             onChangeText={(text) => setEmail(text)}
+          />
+          <TextInput
+            label="Address"
+            placeholder="Enter Address"
+            style={styles.inputField}
+            value={address}
+            onChangeText={(text) => setAddress(text)}
           />
         </View>
         <View style={styles.updateButton}>

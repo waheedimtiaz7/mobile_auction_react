@@ -105,7 +105,7 @@ const Mobiles = () => {
               <Text
                 style={{
                   fontWeight: "bold",
-                  fontSize: 25,
+                  fontSize: 22,
                 }}
               >
                 {item.device_name}
@@ -143,7 +143,7 @@ const Mobiles = () => {
                   >
                     Latest Bid:: {"\b"}
                     </Text>
-                  {item.latestBid?.bid_amount}/Rs
+                  {item.latest_bid?.bid_amount}/Rs
                 </Text>
                 
               </Text>

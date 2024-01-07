@@ -96,7 +96,6 @@ const SellDeviceForm = ({ navigation }) => {
         wifi: Wifi,
         battery: Battery,
         price: Price,
-        suggest_price: SuggestPrice,
         status: "Pending"
       }
       AddDevice(device,selectedImages, navigation);

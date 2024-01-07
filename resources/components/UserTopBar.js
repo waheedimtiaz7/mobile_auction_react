@@ -5,8 +5,7 @@ import { logoutUser } from '../Utils/api';
 
 
 
-const UserTopBar = () => {
-  const navigation = useNavigation();
+const UserTopBar = ({navigation}) => {
   const navigate = (screenName) => {
     navigation.navigate(screenName);
   };
@@ -22,7 +21,7 @@ const UserTopBar = () => {
             uri: "https://www.iconsdb.com/icons/preview/white/home-5-xxl.png",
           }}
           style={styles.image}
-          onPress={() => navigate("Dashboard")}
+          onPress={() => navigation.navigate("Home")}
         />
         <Text>Home</Text>
       </TouchableOpacity>

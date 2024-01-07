@@ -70,6 +70,7 @@ const SingleDevice = ({ navigation, route }) => {
         setResolution(device.resolution);
         setOwnerId(device.ownerId);
         setStatus(device.status);
+        console.log(device.status)
       }
   }, [route.params.device]);
   const update = async () => {
@@ -94,15 +95,13 @@ const SingleDevice = ({ navigation, route }) => {
       wifi: Wifi,
       resolution: Resolution,
       sdcard: SDCard,
-      ownerId: ownerId,
+      device_id: device.id,
     }
-    await updateDevice(device.id,device_info, navigation);
+    await updateDevice(device_info, navigation);
   };
-  const removeDevice = async (id) => {
+  const deleteDevice = async (id) => {
     try {
       await removeDevice(device.id, navigation);
-      alert("Device deleted successfully.");
-      navigation.navigate("Home");
     } catch (error) {
       console.error("Error deleting Device:", error);
     }
@@ -187,7 +186,7 @@ const SingleDevice = ({ navigation, route }) => {
                 fontSize: 20,
                 marginLeft: 15,
                 color: "black",
-                border: 10,
+                
                 textAlign: "center",
                 fontWeight: "bold",
               }}
@@ -346,7 +345,7 @@ const SingleDevice = ({ navigation, route }) => {
                 fontSize: 20,
                 marginLeft: 15,
                 color: "black",
-                border: 10,
+                
                 fontWeight: "bold",
                 textAlign: "center",
               }}
@@ -412,7 +411,7 @@ const SingleDevice = ({ navigation, route }) => {
                 fontSize: 20,
                 marginLeft: 15,
                 color: "black",
-                border: 10,
+                
                 fontWeight: "bold",
                 textAlign: "center",
               }}
@@ -477,7 +476,7 @@ const SingleDevice = ({ navigation, route }) => {
                 fontSize: 20,
                 marginLeft: 15,
                 color: "black",
-                border: 10,
+                
                 fontWeight: "bold",
                 textAlign: "center",
               }}
@@ -564,7 +563,7 @@ const SingleDevice = ({ navigation, route }) => {
                 fontSize: 20,
                 marginLeft: 15,
                 color: "black",
-                border: 10,
+                
                 textAlign: "center",
                 fontWeight: "bold",
               }}
@@ -629,7 +628,7 @@ const SingleDevice = ({ navigation, route }) => {
                 fontSize: 20,
                 marginLeft: 15,
                 color: "black",
-                border: 10,
+                
                 fontWeight: "bold",
                 textAlign: "center",
               }}
@@ -668,7 +667,7 @@ const SingleDevice = ({ navigation, route }) => {
                 fontSize: 20,
                 marginLeft: 15,
                 color: "black",
-                border: 10,
+                
                 fontWeight: "bold",
                 textAlign: "center",
               }}
@@ -722,7 +721,7 @@ const SingleDevice = ({ navigation, route }) => {
             flexDirection:"column",
             alignItems:"center"
           }}>
-            {status === "Available" && (
+            {status === "Pending" && (
           <TouchableOpacity
            
            style={{
@@ -780,7 +779,7 @@ const SingleDevice = ({ navigation, route }) => {
   
               elevation: 9,
             }}
-            onPress={removeDevice}
+            onPress={deleteDevice}
           >
             <Text
               style={{

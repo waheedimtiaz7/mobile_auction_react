@@ -83,81 +83,39 @@ import {
                     borderRadius: 25,
                     width: "90%",
                     height: 150,
-                    alignItems:"center",
+                    padding:15,
                     justifyContent:"center",
                     alignSelf:"center",
+                    alignItems:'center',
                     marginBottom:10,
                     gap:20
                 }}>
-                <View style={{ flexDirection:"column", gap:30 }}>
+                <View style={{ flexDirection:"column", gap:5 }}>
                     <View>
-                        <Text style={{
-                                fontSize: 14,
-                            }} >
-                            <Text
-                                style={{
-                                fontSize: 16,
-                                fontWeight: "bold",
-                                }}
-                            >
-                                Subject
-                            </Text>
+                        <Text
+                            style={{
+                            fontSize: 16,
+                            fontWeight: "bold",
+                            textAlign:'center'
+                            }}
+                        >
                             {"\n"}{item.subject}
                         </Text>
                     </View>
                     <View>
                         <Text style={{ fontSize: 14, }} >
-                            <Text
-                                style={{
-                                fontSize: 16,
-                                fontWeight: "bold",
-                                }}
-                            >
-                                Details
-                            </Text>
-                        {"\n"}{item.details}
-                        </Text>
-                    </View>
-                    <View>
-                        <Text style={{ fontWeight: "bold", }} >
-                            <Text
-                            style={{
-                                fontSize: 17,
-                                fontWeight: "bold",
-                            }}
-                            >
-                            Status:: {"\b"}
-                            </Text>
-                            {item.status}
+                        {item.details}
                         </Text>
                     </View>
                 </View>
-                <View style={{ flexDirection:"row", gap:10}}>
-                
-                    <TouchableOpacity
-                        onPress={()=>navigation.navigate("ComplaintDetail",{complaint_id:item.id})}
-                            style={{
-                            backgroundColor: '#00BFFF',
-                            borderRadius: 90,
-                            width:"40%"
-                            }}
-                        >
-                        <Text
-                            style={{
-                            color: 'black',
-                            textAlign:"center",
-                            paddingVertical:3
-                            }}
-                        >
-                            {item.is_default==1?'Default':'Set Default'}
-                        </Text>
-                        </TouchableOpacity>
+                <View style={{ flexDirection:"row", gap:10, width:"90%", alignSelf:"center",alignItems:"center",justifyContent:'center'}}>
                         <TouchableOpacity
                         onPress={()=>deleteComplaint(item.id)}
                             style={{
                             backgroundColor: 'red',
                             borderRadius: 90,
-                            width:"40%"
+                            width:"40%",
+                            alignSelf:'center'
                             }}
                         >
                         <Text

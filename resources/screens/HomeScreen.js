@@ -124,7 +124,7 @@ const HomeScreen = ({ navigation }) => {
         </TouchableOpacity>
       </View>
     </ImageBackground>
-    <UserTopBar />
+    <UserTopBar navigation={navigation}/>
     </View>
   );
 };

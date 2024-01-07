@@ -93,7 +93,6 @@ const Account = ({ navigation }) => {
         </View>
       </ImageBackground>
       
-    <UserTopBar />
     </View>
   );
 };

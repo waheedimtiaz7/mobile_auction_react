@@ -123,6 +123,62 @@ const saveToken = async (token) => {
       throw error;
     }
   };
+
+  export const updateUser = async (selectedImage, requestData, navigation) => {
+    try {
+      const formData = new FormData();
+        for (const key in requestData) {
+          if (requestData.hasOwnProperty(key)) {
+            // Check if the property is an array or a nested object
+            if (Array.isArray(requestData[key])) {
+              // Handle arrays by appending each element to the FormData
+              requestData[key].forEach((item, index) => {
+                for (const itemKey in item) {
+                  if (item.hasOwnProperty(itemKey)) {
+                    formData.append(`${key}[${index}][${itemKey}]`, item[itemKey]);
+                  }
+                }
+              });
+            } else if (typeof requestData[key] === 'object' && requestData[key] !== null) {
+              // Handle nested objects similarly
+              for (const subKey in requestData[key]) {
+                if (requestData[key].hasOwnProperty(subKey)) {
+                  formData.append(`${key}[${subKey}]`, requestData[key][subKey]);
+                }
+              }
+            } else {
+              // Handle simple key-value pairs
+              formData.append(key, requestData[key]);
+            }
+          }
+        }
+          if(selectedImage!='' && selectedImage!=null){
+            const imageData = await convertImageToBase64(selectedImage, 0);
+            console.log(imageData)
+            formData.append('image',imageData);
+          }
+            
+        
+        console.log(formData)
+        const token = await getToken();
+        const response = await api.post('/update-profile', formData, {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+             "Content-Type": "multipart/form-data",
+          },
+        })
+        if(response.data.success){
+          await AsyncStorage.removeItem('authUser'); // Remove the token after logout
+          await saveUser(response.data.user)
+          alert("Your profile updated successfully")
+          navigation.pop(1);
+        }else{
+          alert(response.data.message);
+        }
+    } catch (error) {
+      throw error;
+    }
+  }
   
   export const getDevices = async () => {
     try {
@@ -230,7 +286,7 @@ const saveToken = async (token) => {
       console.log(response.data)
       if(response.data.success){
         alert("Your Device is Added Successfully.")
-        navigation.replace("Devices");
+        navigation.pop(1);
       }else{
         alert(response.data.message);
       }
@@ -239,17 +295,17 @@ const saveToken = async (token) => {
     }
   };
 
-  export const updateDevice = async (id,device, navigation) => {
+  export const updateDevice = async (device, navigation) => {
     try {
       const token = await getToken();
-      const response = await api.post('/device/update/'+id, {device}, {
+      const response = await api.post('/device/update', device, {
         headers: {
           'Authorization': `Bearer ${token}`,
         },
       });
       if(response.data.success){
-        alert("Your Device is Added Successfully.");
-        navigation.replace("Devices");
+        alert("Your Device is updated Successfully.");
+        navigation.pop(1);
       }else{
         alert(response.data.message);
       }
@@ -267,7 +323,7 @@ const saveToken = async (token) => {
       });
       if(response.data.success){
         alert("Your Device is removed Successfully.");
-        navigation.replace("Devices");
+        navigation.pop(1);
       }else{
         alert(response.data.message);
       }
@@ -294,16 +350,16 @@ export const createNewBid = async (data) => {
     throw error;
   }
 };
-export const acceptBid = async (status, id, navigate) => {
+export const acceptBid = async (status, id, navigation) => {
   try {
     const token = await getToken();
-    const response = await api.post('/accept-bid',  {status:status, bid_id:id}, {
+    const response = await api.post('device/accept-bid',  {status:status, bid_id:id}, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
     });
     if(response.data.success){
-      navigation.replace("Devices");
+      navigation.pop(1);
     }else{
       alert(response.data.message);
     }
@@ -629,28 +685,28 @@ export const updateEmployee = async (selectedImage, requestData, navigation) => 
           }
         }
       }
-      const base64Images = await Promise.all(
-        async () => {
+        if(selectedImage!='' && selectedImage!=null){
           const imageData = await convertImageToBase64(selectedImage, 0);
-          formData.append('image',imageData)
+          console.log(imageData)
+          formData.append('image',imageData);
         }
-      );
-    
+          
+      
       console.log(formData)
       const token = await getToken();
-      const response = await api.post('/device/create', formData, {
+      const response = await api.post('/update-profile', formData, {
         headers: {
           'Authorization': `Bearer ${token}`,
            "Content-Type": "multipart/form-data",
         },
-      });
-      console.log('response.data')
-      console.log(response.data)
+      })
       if(response.data.success){
-        alert("Your Device is Added Successfully.")
-        //navigation.replace("Devices");
+        await AsyncStorage.removeItem('authUser'); // Remove the token after logout
+        await saveUser(response.data.user)
+        alert("Your profile updated successfully")
+        navigation.pop(1);
       }else{
-        //alert(response.data.message);
+        alert(response.data.message);
       }
   } catch (error) {
     throw error;
@@ -680,18 +736,18 @@ export const getUserComplaints = async () => {
   }
 }
 
-export const createComplaint = async () => {
+export const createComplaint = async (data, navigation) => {
   try {
     const token = await getToken();
-    const response = await api.get('/create-complaint',{
+    const response = await api.post('/create-complaint',data,{
       headers: {
         'Authorization': `Bearer ${token}`,
       },
     });
 
     if(response.data.success){
-      return response.data.complaints
-      
+      alert("Your complaint registered successfully our staff will contact you soon.")
+      navigation.replace("Complaints");
     }else{
       alert(response.data.message);
     }
