@@ -9,30 +9,54 @@ import {
 import React, { useState, useEffect } from "react";
 import { Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { collection, onSnapshot } from "firebase/firestore";
-import { db } from "../../../firebase/firebase.config";
 import SingleBidder from "../../components/SingleBidder";
 import OwnerDet from "../../components/OwnerDet";
 import SingleBid from "../../components/SingleBid";
 
+import {getBidDevices, getOngoinAuctionDevices, getSoldDevices } from '../../Utils/api'
+import AllDevices from "../../components/AllDevices";
+import EmployeeDevices from "../../components/Employee/EmployeeDevices";
+import EmployeeMobiles from "../../components/Employee/EmployeeMobiles";
+
 const AuctionManage = () => {
   const navigation = useNavigation();
 
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [type, setType] = useState("All");
   useEffect(() => {}, [type]);
  
   useEffect(() => {
-    const ref = collection(db, "mobiles");
-    onSnapshot(ref, (users) =>
-      setData(
-        users.docs.map((user) => ({
-          id: user.id,
-          data: user.data(),
-        }))
-      )
-    );
+    const fetchData = async () => {
+      try {
+        const devices = await getBidDevices();
+        setData(devices);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    navigation.addListener('focus', () => {
+      fetchData();
+      });
+    
   }, []);
+
+  const getDevicesList = async(type) =>{
+      if(type == 'All'){
+        const devices = await getBidDevices();
+        setData(devices);
+      }else if(type == 'Available'){
+        const ongoing = await getOngoinAuctionDevices();
+        setData(ongoing);
+      }else if(type == 'Sold'){
+        const sold = await getSoldDevices();
+        setData(sold);
+      }
+      
+      setType(type);
+  }
   return (
     <ImageBackground
       source={{
@@ -53,7 +77,7 @@ const AuctionManage = () => {
           >
             <TouchableOpacity
               style={styles.topButton}
-              onPress={() => setType("All")}
+              onPress={() => getDevicesList("All")}
             >
               <Text
                 style={{
@@ -64,8 +88,8 @@ const AuctionManage = () => {
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
-                style={styles.topButton}
-              onPress={() => setType("Active")}
+               style={styles.topButton}
+              onPress={() => getDevicesList("Available")}
             >
               <Text
                 style={{
@@ -77,19 +101,7 @@ const AuctionManage = () => {
             </TouchableOpacity>
             <TouchableOpacity
                style={styles.topButton}
-              onPress={() => setType("Hold")}
-            >
-              <Text
-                style={{
-                  color: "white",
-                }}
-              >
-                Hold
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-               style={styles.topButton}
-              onPress={() => setType("Sold")}
+              onPress={() => getDevicesList("Sold")}
             >
               <Text
                 style={{
@@ -102,7 +114,7 @@ const AuctionManage = () => {
           </View>
           {data.map((item, key) => (
             <View key={key}>
-              {item.data.status === type && (
+              
                 <View
                   style={{
                     flexDirection: "column",
@@ -133,7 +145,7 @@ const AuctionManage = () => {
                       >
                         Owner
                       </Text>
-                      <OwnerDet id={item.data.ownerId} />
+                      <OwnerDet user={item.user} />
                     </View>
                     <View
                       style={{
@@ -154,7 +166,7 @@ const AuctionManage = () => {
                       </Text>
                       <Image
                         source={{
-                          uri: item.data.picture,
+                          uri: item.picture,
                         }}
                         style={{
                           width: 50,
@@ -162,8 +174,8 @@ const AuctionManage = () => {
                           borderRadius: 10,
                         }}
                       />
-                      <Text>{item.data.device_name}</Text>
-                      {item.data.status === "Hold" && (
+                      <Text>{item.device_name}</Text>
+                      {item.status === "Available" && (
                         <View>
                           <Text
                             style={{
@@ -174,11 +186,11 @@ const AuctionManage = () => {
                           >
                             Bid Details
                           </Text>
-                          <SingleBid id={item.data.bid_Id} />
+                          <SingleBid bid={item.latest_bid} />
                         </View>
                       )}
 
-                      {item.data.status === "Sold" && (
+                      {(item.status === "Sold" || item.status === "In Transit") && (
                         <View>
                           <Text
                             style={{
@@ -187,7 +199,7 @@ const AuctionManage = () => {
                           >
                             Bid Details
                           </Text>
-                          <SingleBid id={item.data.bid_Id} />
+                          <SingleBid bid={item.accepted_bid} />
                         </View>
                       )}
                     </View>
@@ -204,108 +216,13 @@ const AuctionManage = () => {
                       >
                         Buyer
                       </Text>
-                      <SingleBidder id={item.data.bidderId} />
+                      {(item.status === "Sold" || item.status === "In Transit") && (<SingleBidder user={item.bidder} />)}
+                      {item.status === "Available" && <SingleBidder user={item.latest_bid.user} />}
                     </View>
                   </View>
-                  {item.data.status === "Hold" && (
-                    <TouchableOpacity
-                      style={{
-                        backgroundColor: "#0d75bf",
-                        width: "89%",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        marginLeft: 20,
-                        height: 40,
-                        borderBottomLeftRadius: 15,
-                        borderBottomRightRadius: 15,
-                        position: "relative",
-                        top: -26,
-                      }}
-                      onPress={() =>
-                        navigation.navigate("meeting", {
-                          id: item.id,
-                        })
-                      }
-                    >
-                      <Text
-                        style={{
-                          color: "white",
-                        }}
-                      >
-                        Appoientment
-                      </Text>
-                    </TouchableOpacity>
-                  )}
                 </View>
-              )}
-
-              {type === "All" && (
-                <View
-                  style={{
-                    flexDirection: "row",
-                    margin: 20,
-                    justifyContent: "space-evenly",
-                    backgroundColor: "white",
-                    padding: 5,
-                    borderRadius: 40,
-                  }}
-                >
-                  <View
-                    style={{
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 10,
-                      }}
-                    >
-                      Owner
-                    </Text>
-                    <OwnerDet id={item.data.ownerId} />
-                  </View>
-                  <View
-                    style={{
-                      alignItems: "center",
-                      justifyContent: "center",
-                      marginTop: 1,
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 10,
-                      }}
-                    >
-                      Product
-                    </Text>
-                    <Image
-                      source={{
-                        uri: item.data.picture,
-                      }}
-                      style={{
-                        width: 50,
-                        height: 50,
-                        borderRadius: 10,
-                      }}
-                    />
-                    <Text>{item.data.device_name}</Text>
-                  </View>
-                  <View
-                    style={{
-                      alignItems: "center",
-                    }}
-                  >
-                    <Text
-                      style={{
-                        fontSize: 10,
-                      }}
-                    >
-                      Buyer
-                    </Text>
-                    <SingleBidder id={item.data.bidderId} />
-                  </View>
-                </View>
-              )}
+             
+            
             </View>
           ))}
         </ScrollView>

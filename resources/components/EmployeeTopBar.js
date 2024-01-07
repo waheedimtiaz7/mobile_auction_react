@@ -18,20 +18,8 @@ const EmployeeTopBar = () => {
     });
   };
   return (
-    <SafeAreaView
-      style={{
-        backgroundColor: "#00BFFF",
-        flexDirection: "row",
-        justifyContent: "space-evenly",
-        paddingTop: 8,
-      }}
-    >
-      <TouchableOpacity
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+    <SafeAreaView style={styles.container}>
+      <TouchableOpacity style={styles.buttonContainer}>
         <Image
           source={{
             uri: "https://www.iconsdb.com/icons/preview/white/house-xl.png",
@@ -40,16 +28,13 @@ const EmployeeTopBar = () => {
             width: 30,
             height: 30,
           }}
-          onPress={() => navigate("Dashboard")}
+          onPress={() => navigate("EmployeeDashboard")}
         />
         <Text>Home</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        style={styles.buttonContainer}
         onPress={() => navigate("Auctionmanage")}
       >
         <Image
@@ -69,10 +54,7 @@ const EmployeeTopBar = () => {
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        style={styles.buttonContainer}
         onPress={() =>
           navigation.navigate("Mobile", {
             type: "Employee",
@@ -89,33 +71,19 @@ const EmployeeTopBar = () => {
             height: 30,
           }}
         />
-        {/* <Image
-    source={{ uri: dbImage }}
-    style={{ width: 100, height: 100, borderRadius: 50 }}
-  /> */}
         <Text>Devices</Text>
       </TouchableOpacity>
 
       <TouchableOpacity
-        style={{
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+        style={styles.buttonContainer}
         onPress={logout}
       >
         <Image
           source={{
             uri: "https://www.iconsdb.com/icons/preview/white/logout-xl.png",
           }}
-          style={{
-            width: 30,
-            height: 30,
-          }}
+          style={styles.image}
         />
-        {/* <Image
-    source={{ uri: dbImage }}
-    style={{ width: 100, height: 100, borderRadius: 50 }}
-  /> */}
         <Text>Logout</Text>
       </TouchableOpacity>
     </SafeAreaView>
@@ -124,4 +92,25 @@ const EmployeeTopBar = () => {
 
 export default EmployeeTopBar;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "white",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    padding: 5,
+    paddingBottom: 2,
+    backgroundColor: "#00BFFF",
+    height: 60,
+    position:"absolute",
+    width:"100%",
+    bottom:0
+  },
+  buttonContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  image: {
+    width: 30,
+    height: 30,
+  },
+});

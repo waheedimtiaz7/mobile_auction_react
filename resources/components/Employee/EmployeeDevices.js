@@ -1,29 +1,27 @@
 import {
+  Image,
+  ScrollView,
   StyleSheet,
   Text,
-  View,
   TouchableOpacity,
-  Image,
-  ImageBackground,
+  View,
 } from "react-native";
 import React, { useEffect, useState } from "react";
+import { collection, onSnapshot } from "firebase/firestore";
+
 import { useNavigation } from "@react-navigation/native";
-import { getMyDevices } from '../Utils/api';
-import { ScrollView } from "react-native";
+import { getNewDevices, getDeviceDetail } from '../../Utils/api'
 
 
-const UserHome = () => {
+const EmployeeDevices = () => {
   const [userId, setUserId] = useState("");
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigation = useNavigation();
-  const navigate = (screenName) => {
-    navigation.navigate(screenName);
-  };
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const devices = await getMyDevices();
+        const devices = await getNewDevices();
         setData(devices);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -31,41 +29,31 @@ const UserHome = () => {
         setLoading(false);
       }
     };
-    fetchData();
+    navigation.addListener('focus', () => {
+      fetchData();
+      });
+    
   }, []);
-
   return (
     <View style={{
-        flex:1
-    }}>
-      <View style={{ flexDirection: "row", alignItems: "center", }}>
-        <Text
-          style={{
-            fontSize: 20,
-            marginBottom: 20,
-            marginTop: 5,
-            marginLeft: 10,
-            color: "white",
-            fontStyle: "italic",
-            fontWeight: "bold",
-            width: "48%",
+      flex:1
+  }}>
+    <View style={{ flexDirection: "row", alignItems: "center", }}>
+      <Text
+        style={{
+          fontSize: 20,
+          marginBottom: 20,
+          marginTop: 5,
+          marginLeft: 10,
+          color: "white",
+          fontStyle: "italic",
+          fontWeight: "bold",
+          width: "48%",
 
-          }}
-        >
-          My Devices
+        }}
+      >
+          Pending Devices
         </Text>
-
-        <TouchableOpacity onPress={() => navigate("AllMobiles")}>
-          <Text
-            style={{
-              color: "black",
-              fontSize: 16,
-              marginLeft: 100,
-            }}
-          >
-            View All
-          </Text>
-        </TouchableOpacity>
       </View>
       <ScrollView
         horizontal
@@ -102,7 +90,7 @@ const UserHome = () => {
                 }}
               />
 
-              <View
+<View
                 style={{
                 }}
               >
@@ -147,7 +135,7 @@ const UserHome = () => {
                   {item.status}
                 </Text>
                 <TouchableOpacity
-                      onPress={() => navigation.navigate("Device Detail", {
+                      onPress={() => navigation.navigate("priceSuggest", {
                                 id: item.id,
                                 device: item,
                               })}
@@ -175,6 +163,6 @@ const UserHome = () => {
   );
 };
 
-export default UserHome;
+export default EmployeeDevices;
 
 const styles = StyleSheet.create({});

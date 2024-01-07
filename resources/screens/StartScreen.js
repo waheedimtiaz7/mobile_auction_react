@@ -11,6 +11,8 @@ const StartScreen = ({ navigation }) => {
         const user = JSON.parse(userData);
         if(user.type =='Customer'){
           navigation.navigate("Home")
+        }else if(user.type =='Employee'){
+          navigation.replace("EmployeeDashboard");
         }
         
       }

@@ -100,7 +100,7 @@ const SingleDevice = ({ navigation, route }) => {
   };
   const removeDevice = async (id) => {
     try {
-      await deleteDevice(device.id, navigation);
+      await removeDevice(device.id, navigation);
       alert("Device deleted successfully.");
       navigation.navigate("Home");
     } catch (error) {
@@ -722,7 +722,7 @@ const SingleDevice = ({ navigation, route }) => {
             flexDirection:"column",
             alignItems:"center"
           }}>
-            {status === "Pending" && (
+            {status === "Available" && (
           <TouchableOpacity
            
            style={{

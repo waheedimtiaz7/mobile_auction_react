@@ -10,11 +10,9 @@ import {
 } from "react-native";
 
 import { TextInput } from "react-native-paper";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { auth, db, storage } from "../../../firebase/firebase.config";
 import * as ImagePicker from "expo-image-picker";
-import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const AdminProfile = ({ navigation }) => {
   const [email, setEmail] = useState(null);
@@ -34,92 +32,30 @@ const AdminProfile = ({ navigation }) => {
 
 
     if (!result.canceled) {
+      console.log(result.assets)
       setImage(result.assets[0].uri);
     }
   };
 
-  useEffect(() => {
-    const uploadPicture = async () => {
-      const metadata = {
-        contentType: "image/jpeg",
-      };
-
-      const blob = await new Promise((resolve, reject) => {
-        const xhr = new XMLHttpRequest();
-        xhr.onload = function() {
-          resolve(xhr.response);
-        };
-        xhr.onerror = function() {
-          reject(new TypeError("Network request failed"));
-        };
-        xhr.responseType = "blob";
-        xhr.open("GET", image, true);
-        xhr.send(null);
-      });
-
-      const storageRef = ref(storage, "profiles/" + Date.now());
-      const uploadTask = uploadBytesResumable(storageRef, blob, metadata);
-
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          console.log("Upload is " + progress + "% done");
-          switch (snapshot.state) {
-            case "paused":
-              console.log("Upload is paused");
-              break;
-            case "running":
-              console.log("Upload is running");
-              break;
-          }
-        },
-        (error) => {
-          switch (error.code) {
-            case "storage/unauthorized":
-              break;
-            case "storage/canceled":
-              break;
-            case "storage/unknown":
-              break;
-          }
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            console.log("File available at", downloadURL);
-            setDbImage(downloadURL);
-          });
-        }
-      );
-    };
-
-    if (image != null) {
-      uploadPicture();
-      setImage(null);
-    }
-  }, [image, dbImage]);
+  
 
   useEffect(() => {
-    const readInfo = async () => {
-      const docRef = doc(db, "users", auth.currentUser.uid);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        setfname(docSnap.data().fname);
-        setlname(docSnap.data().lname);
-        setPhone(docSnap.data().phone);
-        setDbImage(docSnap.data().picture);
-        setEmail(docSnap.data().email);
+    ftechUser = async () => {
+      const userData =  await AsyncStorage.getItem('authUser');
+      if(JSON.parse(userData)){
+        const user = JSON.parse(userData);
+        setfname(user.fname);
+        setlname(user.lname);
+        setPhone(user.phone);
+        setDbImage(user.picture);
+        setEmail(user.email);
+        
       }
-    };
-
-    readInfo();
-  }, [email]);
+  };
+  ftechUser();
+  }, []);
 
   const update = async () => {
-    const washingtonRef = doc(db, "users", auth.currentUser.uid);
-
     await updateDoc(washingtonRef, {
       fname: fname,
       lname: lname,

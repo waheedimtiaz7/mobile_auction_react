@@ -2,8 +2,24 @@ import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { Image } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LogoScreen = ({ navigation }) => {
+
+  const gotScreen = async () =>{
+      const userData =  await AsyncStorage.getItem('authUser');
+      if(JSON.parse(userData)){
+        const user = JSON.parse(userData);
+        if(user.type =='Customer'){
+          navigation.navigate("Home");
+        }else if(user.type =='Employee'){
+          navigation.replace("EmployeeDashboard");
+        }else{
+          navigation.navigate("Start");
+        }
+      
+    }
+  }
   return (
     <SafeAreaView
       style={{
@@ -39,7 +55,7 @@ const LogoScreen = ({ navigation }) => {
       }}> 
       
           <TouchableOpacity
-          onPress={()=>navigation.navigate("Start")}
+          onPress={()=>gotScreen()}
 
           style={{ 
             width: '90%',

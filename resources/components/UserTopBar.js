@@ -44,9 +44,7 @@ const UserTopBar = () => {
       <TouchableOpacity
         style={styles.buttonContainer}
         onPress={() =>
-          navigate("AdminProfile", {
-            type: "User",
-          })
+          navigate("Account")
         }
       >
         <Image

@@ -34,9 +34,8 @@ import SingleDevice from "./resources/screens/SingleDevice";
 import SellDeviceForm from "./resources/screens/SellDeviceForm";
 import AuctionScreen from "./resources/screens/AuctionScreen";
 import Device from "./resources/screens/Device";
-import Profile from "./resources/screens/profile";
 import AdminUsers from "./resources/components/AdminUsers";
-import EmployeeDevices from "./resources/components/EmployeeDevices";
+import EmployeeDevices from "./resources/components/Employee/EmployeeDevices";
 import PriceSuggestionScreen from "./resources/screens/Employee/PriceSuggestionScreen";
 import Auction from "./resources/screens/Auction";
 import AllBidding from "./resources/components/AllBidding";
@@ -45,6 +44,13 @@ import SingleBidder from "./resources/components/SingleBidder";
 import SingleBid from "./resources/components/SingleBid";
 import OwnerDet from "./resources/components/OwnerDet";
 import Appointment from "./resources/screens/Employee/Appointment";
+
+////////////////User Account Screens//////////////
+import Account from "./resources/screens/Account";
+import Complaints from "./resources/screens/UserComplaintsList";
+import PaymentMethods from "./resources/screens/UserPaymentMethodsList";
+import Profile from "./resources/screens/profile";
+import NewComplaint from "./resources/screens/NewComplaint";
 
 async function registerForPushNotificationsAsync() {
 
@@ -373,6 +379,63 @@ export default function App() {
         <Stack.Screen name="Owner" component={OwnerDet} />
         <Stack.Screen name="SingleBid" component={SingleBid} />
         <Stack.Screen name="meeting" component={Appointment} />
+        {/* User Account Routes */}
+        <Stack.Screen
+          name="Account"
+          options={{
+            title: "Account",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontStyle: "italic",
+              fontSize: 20,
+              fontWeight: "bold",
+              color: "#00BFFF",
+            },
+          }}
+          component={Account}
+        />
+        <Stack.Screen
+          name="PaymentMethods"
+          options={{
+            title: "Payment Methods",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontStyle: "italic",
+              fontSize: 20,
+              fontWeight: "bold",
+              color: "#00BFFF",
+            },
+          }}
+          component={PaymentMethods}
+        />
+        <Stack.Screen
+          name="Complaints"
+          options={{
+            title: "Complaints",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontStyle: "italic",
+              fontSize: 20,
+              fontWeight: "bold",
+              color: "#00BFFF",
+            },
+          }}
+          component={Complaints}
+        />
+        <Stack.Screen
+          name="CreateComplaint"
+          options={{
+            title: "New Complaint",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontStyle: "italic",
+              fontSize: 20,
+              fontWeight: "bold",
+              color: "#00BFFF",
+            },
+          }}
+          component={NewComplaint}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

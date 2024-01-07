@@ -9,11 +9,7 @@ import {
 import React, { useEffect, useState } from "react";
 import { Image, ImageBackground } from "react-native";
 import { TextInput } from "react-native-paper";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
-import { db } from "../../../firebase/firebase.config";
-
-
-
+import { updateDeviceStatusByEmployee, getDeviceDetail } from '../../Utils/api'
 
 const PriceSuggestionScreen = ({navigation,route}) => {
   // const navigation = useNavigation();
@@ -21,6 +17,7 @@ const PriceSuggestionScreen = ({navigation,route}) => {
   //   navigation.navigate(screenName);
   // };
   const [mobile_id, setMobile_id] = useState(route.params.id);
+  const [device, setDevice] = useState(route.params.device);
   
   const [OS, setOS] = useState("");
   const [UI, setUI] = useState("");
@@ -48,48 +45,51 @@ const PriceSuggestionScreen = ({navigation,route}) => {
   const [dbImage, setDbImage] = useState(null);
   useEffect(() => {
     const readInfo = async () => {
-      const docRef = doc(db, "mobiles", mobile_id);
-      const docSnap = await getDoc(docRef);
-  
-      if (docSnap.exists()) {
-      
-        setDevice_name(docSnap.data().device_name);
-        setModel(docSnap.data().model);
-        setDbImage(docSnap.data().picture);
-        setOS(docSnap.data().os);
-        setUI(docSnap.data().ui);
-        setBattery(docSnap.data().battery);
-        setBluetooth(docSnap.data().bluetooth);
-        setCPU(docSnap.data().cpu);
-        setGPU(docSnap.data().gpu);
-        setDimensions(docSnap.data().dimensions);
-        setColor(docSnap.data().color);
-        setRAM(docSnap.data().ram);
-        setROM(docSnap.data().rom);
-        setSize(docSnap.data().size);
-        setSDCard(docSnap.data().sdcard);
-        setSim(docSnap.data().sim);
-        setWeight(docSnap.data().weight);
-        setPrice(docSnap.data().price);
-        setWifi(docSnap.data().wifi);
-        setResolution(docSnap.data().resolution);
-        setSts(docSnap.data().status);
-        setS_Price(docSnap.data().SuggestPrice);
+     
+        setDevice_name(device.device_name);
+        setModel(device.model);
+        setDbImage(device.picture);
+        setOS(device.os);
+        setUI(device.ui);
+        setBattery(device.battery);
+        setBluetooth(device.bluetooth);
+        setCPU(device.cpu);
+        setGPU(device.gpu);
+        setDimensions(device.dimensions);
+        setColor(device.color);
+        setRAM(device.ram);
+        setROM(device.rom);
+        setSize(device.size);
+        setSDCard(device.sdcard);
+        setSim(device.sim);
+        setWeight(device.weight);
+        setPrice(device.price);
+        setWifi(device.wifi);
+        setResolution(device.resolution);
+        setSts(device.status);
+        setS_Price(device.SuggestPrice);
         
-      }
     };
     readInfo();
   }, [route.params.id]);
   const changeStatus = async (status) => {
-    const washingtonRef = doc(db, "mobiles", route.params.id);
-
-    // Set the "capital" field of the city 'DC'
-    await updateDoc(washingtonRef, {
-      status: status,
-      SuggestPrice:SuggestPrice
-    }).then(() => {
-      alert("Device is " + status);
-    });
+      if(status == 'Available'){
+        if(SuggestPrice == ''){
+          alert('Please enter suggested price')
+        }else{
+            updateDeviceStatusByEmployee({
+              status:status,
+              suggest_price: SuggestPrice,
+              device_id: device.id
+            }, navigation)
+        }
+      }else{
+        updateDeviceStatusByEmployee({
+          status:status,
+          suggest_price: 0,
+          device_id: device.id
+        }, navigation)
+      }
   };
   return (
     <ImageBackground
@@ -103,673 +103,930 @@ const PriceSuggestionScreen = ({navigation,route}) => {
     >
       <ScrollView
         style={{
-          width: "90%",
-          marginLeft: 15,
           paddingTop: 10,
         }}
       >
-        {/* <View>
+        <View
+          style={{
+            width: "90%",
+            alignSelf:"center"
+          }}
+        >
           <Text
             style={{
-              fontSize: 20,
-              marginLeft: 15,
-              color: "black",
-              border: 10,
+              fontSize: 25,
+              textAlign:"center",
+              color: "#ACFF05",
+              
               textAlign: "center",
               fontWeight: "bold",
             }}
           >
-            Device Details
+            {device.device_name} {device.model}
           </Text>
-        </View> */}
+        </View>
+        
+          <Image
+            source={{
+              uri: device.picture,
+            }}
+            style={{
+              height: 150,
+              width: 150,
+              borderRadius: 100,
+              marginBottom:10,
+              alignSelf:"center"
+            }}
+          />
+          <View style={{ width:"90%", alignSelf:"center", borderWidth:1, borderColor: "white",
+            borderRadius: 5,padding:10, marginBottom:10}}>
+            <Text style={{ fontWeight:'bold', fontSize:20 }}>Owner Detail</Text>
+              <View style={{ flexDirection:"row", gap:10}}>
+                  <View style={{ width:"50%"}}>
+                    <Text style={{ fontWeight:'bold' }}>Name</Text>
+                    <Text style={{ color:'white' }}>{ device.user.fname+' '+device.user.lname }</Text>
+                  </View>
+                  <View style={{ width:"50%"}}>
+                    <Text style={{ fontWeight:'bold' }}>Phone</Text>
+                    <Text style={{ color:'white' }}>{device.user.phone}</Text>
+                  </View>
+                  
+              </View>
+              <View style={{ flexDirection:"row", gap:10}}>
+              <View >
+                    <Text style={{ fontWeight:'bold' }}>Email</Text>
+                    <Text style={{ color:'white' }}>{device.user.email}</Text>
+                  </View>
+              </View>
+          </View>
         <View
           style={{
-            flexDirection: "row",
+            borderWidth: 1,
+            width:"90%",
+            alignSelf:"center",
+            borderColor: "white",
+            borderRadius: 5,
           }}
         >
-        
-          <TextInput
-            label="name"
-            placeholder="Enter Device Name"
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              width: "48%",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-
-              elevation: 8,
-            }}
-            value={Device_name}
-            onChangeText={(text) => setDevice_name(text)}
-            editable={false}
-          />
-          <TextInput
-            label="model"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              width: "48%",
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              marginLeft: 10,
-            }}
-            value={Model}
-            onChangeText={(text) => setModel(text)}
-            editable={false}
-          />
-        </View>
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          style={{
-            position: "relative",
-            paddingTop: 8,
-            paddingBottom: 8,
-          }}
-        >
-          <Image
-            source={{
-              uri:dbImage
-                
-            }}
-            style={{
-              height: 200,
-              width: 150,
-            }}
-          />
-          {/* <Image
-          
-            style={{
-              height: 200,
-              width: 100,
-              marginLeft: 8,
-            }}
-          />
-          <Image
-            source={{
-              uri:
-                "https://www.whatmobile.com.pk/admin/images/Samsung/SamsungGalaxyA34-b.jpg",
-            }}
-            style={{
-              height: 200,
-              width: 90,
-              marginLeft: 8,
-              marginRight: 9,
-            }}
-          /> */}
-        </ScrollView>
-
-        <View>
           <Text
             style={{
-              fontSize: 20,
-              marginLeft: 15,
-              color: "black",
-              border: 10,
-              textAlign: "center",
+              fontSize: 18,
+              color: "#333",
               fontWeight: "bold",
+              marginLeft: 10,
             }}
           >
             Builder
           </Text>
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            <View
+              style={{
+                marginLeft: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                Operating System{"\b"}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                User Interface{"\b"}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                Dimensions{"\b"}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                Weight{"\b"}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                Color{"\b"}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                Sim{"\b"}
+              </Text>
+            </View>
+            <View>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.os}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.ui}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.dimensions}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.weight}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.color}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.sim}
+              </Text>
+            </View>
+          </View>
         </View>
+
         <View
           style={{
-            flexDirection: "row",
-          }}
-        >
-          <TextInput
-            label="Operating System"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "48%",
-            }}
-            value={OS}
-            onChangeText={(text) => setOS(text)}
-            editable={false}
-          />
-          <TextInput
-            label="User Interface"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "48%",
-              marginLeft: 10,
-            }}
-            value={UI}
-            onChangeText={(text) => setUI(text)}
-            editable={false}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          <TextInput
-            label="Dimensions"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "48%",
-            }}
-            value={Dimensions}
-            onChangeText={(text) => setDimensions(text)}
-            editable={false}
-          />
-          <TextInput
-         label="Weight"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "48%",
-              marginLeft: 10,
-            }}
-            value={Weight}
-            onChangeText={(text) => setWeight(text)}
-            editable={false}
-          />
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          <TextInput
-            label="Color"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "48%",
-            }}
-            value={Color}
-            onChangeText={(text) => setColor(text)}
-            editable={false}
-          />
-          <TextInput
-            label="SIM"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "48%",
-              marginLeft: 10,
-            }}
-            value={Sim}
-            onChangeText={(text) => setSim(text)}
-            editable={false}
-          />
-        </View>
-        <View
-          style={{
-            marginRight: 10,
+            borderWidth: 1,
+            width:"90%",
+alignSelf:"center",
+borderColor: "white",
+            borderRadius: 5,
+            marginTop: 10,
           }}
         >
           <Text
             style={{
-              fontSize: 20,
-              marginLeft: 15,
-              color: "black",
-              border: 10,
+              fontSize: 18,
+              color: "#333",
+              
               fontWeight: "bold",
-              textAlign: "center",
+              marginLeft: 10,
             }}
           >
             Processor
           </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          <TextInput
-            label="CPU"
-            placeholder=""
+          <View
             style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "48%",
+              flexDirection: "row",
             }}
-            value={CPU}
-            onChangeText={(text) => setCPU(text)}
-            editable={false}
-          />
-          <TextInput
-           label="GPU"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "48%",
-              marginLeft: 10,
-            }}
-            value={GPU}
-            onChangeText={(text) => setGPU(text)}
-            editable={false}
-          />
+          >
+            <View
+              style={{
+                marginLeft: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                CPU{"\b"}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                GPU{"\b"}
+              </Text>
+            </View>
+            <View style={{ marginLeft: 75 }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.cpu}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.gpu}
+              </Text>
+            </View>
+          </View>
         </View>
 
         <View
           style={{
-            marginRight: 10,
+            borderWidth: 1,
+            width:"90%",
+alignSelf:"center",
+borderColor: "white",
+            borderRadius: 5,
+            marginTop: 10,
           }}
         >
           <Text
             style={{
-              fontSize: 20,
-              marginLeft: 15,
-              color: "black",
-              border: 10,
+              fontSize: 18,
+              color: "#333",
+              
               fontWeight: "bold",
-              textAlign: "center",
+              marginLeft: 10,
             }}
           >
             Screen
           </Text>
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            <View
+              style={{
+                marginLeft: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                Size{"\b"}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                Resolution{"\b"}
+              </Text>
+            </View>
+            <View style={{ marginLeft: 50 }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.size}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.resolution}
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           style={{
-            flexDirection: "row",
-          }}
-        >
-          <TextInput
-           label="Size"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "48%",
-            }}
-            value={Size}
-            onChangeText={(text) => setSize(text)}
-            editable={false}
-          />
-          <TextInput
-           label="Resolution"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "48%",
-              marginLeft: 10,
-            }}
-            value={Resolution}
-            onChangeText={(text) => setResolution(text)}
-            editable={false}
-          />
-        </View>
-        <View
-          style={{
-            marginRight: 10,
+            borderWidth: 1,
+            width:"90%",
+alignSelf:"center",
+borderColor: "white",
+            borderRadius: 5,
+            marginTop: 10,
           }}
         >
           <Text
             style={{
-              fontSize: 20,
-              marginLeft: 15,
-              color: "black",
-              border: 10,
+              fontSize: 18,
+              color: "#333",
+              
               fontWeight: "bold",
-              textAlign: "center",
+              marginLeft: 10,
             }}
           >
             Memory/Storage
           </Text>
-        </View>
-        <View
-          style={{
-            flexDirection: "row",
-          }}
-        >
-          <TextInput
-        label="RAM"
-            placeholder=""
+          <View
             style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "30%",
+              flexDirection: "row",
             }}
-            value={RAM}
-            onChangeText={(text) => setRAM(text)}
-            editable={false}
-          />
-          <TextInput
-           label="ROM"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "30%",
-              marginLeft: 10,
-            }}
-            value={ROM}
-            onChangeText={(text) => setROM(text)}
-            editable={false}
-          />
-          <TextInput
-         label="SDCard"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "35%",
-              marginLeft: 10,
-            }}
-            value={SDCard}
-            onChangeText={(text) => setSDCard(text)}
-            editable={false}
-          />
-        </View>
+          >
+            <View
+              style={{
+                marginLeft: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                RAM{"\b"}
+              </Text>
 
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                ROM{"\b"}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                SDCard {"\b"}
+              </Text>
+            </View>
+            <View style={{ marginLeft: 65 }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.ram}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.rom}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.sdcard}
+              </Text>
+            </View>
+          </View>
+        </View>
         <View
           style={{
-            marginRight: 10,
+            borderWidth: 1,
+            width:"90%",
+alignSelf:"center",
+borderColor: "white",
+            borderRadius: 5,
+            marginTop: 10,
           }}
         >
           <Text
             style={{
-              fontSize: 20,
-              marginLeft: 15,
-              color: "black",
-              border: 10,
-              textAlign: "center",
+              fontSize: 18,
+              color: "#333",
               fontWeight: "bold",
+              marginLeft: 10,
             }}
           >
             Connections/Networks
           </Text>
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            <View
+              style={{
+                marginLeft: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  marginBottom:5,
+                }}
+              >
+                Bluetooth{"\b"}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                Wifi{"\b"}
+              </Text>
+            </View>
+            <View style={{ marginLeft: 65 }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.bluetooth}
+              </Text>
+
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.wifi}
+              </Text>
+            </View>
+          </View>
         </View>
         <View
           style={{
-            flexDirection: "row",
-          }}
-        >
-          <TextInput
-            label="Bluetooth"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "48%",
-            }}
-            value={Bluetooth}
-            onChangeText={(text) => setBluetooth(text)}
-            editable={false}
-          />
-          <TextInput
-label="Wifi"
-            placeholder=""
-            style={{
-              marginVertical: 5,
-              backgroundColor: "white",
-              shadowColor: "#000",
-              shadowOffset: {
-                width: 0,
-                height: 4,
-              },
-              shadowOpacity: 0.3,
-              shadowRadius: 4.65,
-              elevation: 8,
-              width: "48%",
-              marginLeft: 10,
-            }}
-            value={Wifi}
-            onChangeText={(text) => setWifi(text)}
-            editable={false}
-          />
-        </View>
-        <View
-          style={{
-            marginRight: 10,
+            borderWidth: 1,
+            width:"90%",
+alignSelf:"center",
+borderColor: "white",
+            borderRadius: 5,
+            marginTop: 10,
+            marginBottom: 5,
           }}
         >
           <Text
             style={{
-              fontSize: 20,
-              marginLeft: 15,
-              color: "black",
-              border: 10,
+              fontSize: 18,
+              color: "#333",
+              
               fontWeight: "bold",
-              textAlign: "center",
+              marginLeft: 10,
             }}
           >
             Battery Details
           </Text>
+          <View
+            style={{
+              flexDirection: "row",
+            }}
+          >
+            <View
+              style={{
+                marginLeft: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                Battery {"\b"}
+              </Text>
+            </View>
+            <View style={{ marginLeft: 65 }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.battery}
+              </Text>
+            </View>
+          </View>
         </View>
-        <TextInput
-         label="Battery"
-          placeholder=""
-          style={{
-            marginVertical: 5,
-            backgroundColor: "white",
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 4,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: 4.65,
-
-            elevation: 8,
-          }}
-          value={Battery}
-          onChangeText={(text) => setBattery(text)}
-          editable={false}
-        />
-
         <View
           style={{
-            marginRight: 10,
+            borderWidth: 1,
+            width:"90%",
+alignSelf:"center",
+borderColor: "white",
+            borderRadius: 5,
+            marginBottom: 6,
           }}
         >
           <Text
             style={{
-              fontSize: 20,
-              marginLeft: 15,
-              color: "black",
-              border: 10,
+              fontSize: 18,
+              color: "#333",
+              
               fontWeight: "bold",
-              textAlign: "center",
+              marginLeft: 10,
             }}
           >
-            Seller Price
+            Price
           </Text>
-        </View>
-        <TextInput
-          
-          placeholder=""
-          style={{
-            marginVertical: 5,
-            backgroundColor: "white",
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 4,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: 4.65,
-
-            elevation: 8,
-          }}
-          value={Price}
-          onChangeText={(text) => setPrice(text)}
-          editable={false}
-        />
-         <View
-          style={{
-            marginRight: 10,
-          }}
-        >
-          <Text
+          <View
             style={{
-              fontSize: 20,
-              marginLeft: 15,
-              color: "black",
-              border: 10,
-              fontWeight: "bold",
-              textAlign: "center",
+              flexDirection: "row",
             }}
           >
-            Suggest Your Price
-          </Text>
-        </View>
-        { sts==="Active" &&  ( 
+            <View
+              style={{
+                marginLeft: 10,
+              }}
+            >
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                Seller Price{"\b"}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: "bold",
+                  color: "white",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                }}
+              >
+                Suggested Price{"\b"}
+              </Text>
+            </View>
+            <View style={{ marginLeft: 15 }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 10,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.price}
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  color: "black",
+                  
+                  marginLeft: 50,
+                  textAlign: "center",
+                  borderWidth: 1,
+                  borderColor: "blue",
+                  borderRadius: 5,
+                  paddingHorizontal: 30,
+                  
+marginBottom:5,
+                  fontWeight: "bold",
+                }}
+              >
+                {device.suggestPrice}
+              </Text>
+            </View>
+          </View>
+        </View> 
+        <View style={{ width:"90%", alignSelf:"center"}}>
+          <Text>Suggested Price *</Text>
         <TextInput
           
-          placeholder=""
-          style={{
-            marginVertical: 5,
-            backgroundColor: "white",
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 4,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: 4.65,
-
-            elevation: 8,
-          }}
-          value={S_Price}
-          onChangeText={(text) => setS_Price(text)}
-          editable={false}
-        />  )}  
-         { sts==="Pending" &&  (  
-          <TextInput
-          
-          placeholder=""
+          placeholder="Enter suggested price"
           style={{
             marginVertical: 5,
             backgroundColor: "white",
@@ -787,18 +1044,14 @@ label="Wifi"
           onChangeText={(text) => setSuggestPrice(text)}
           
         />
-         )}
-        { sts==="Pending" &&  (
-          
-       
-        <TouchableOpacity
-          onPress={() => changeStatus("Active")}
+       <View style={{ flexDirection:"row", alignSelf:'center', gap:10,marginBottom:10}}>
+       <TouchableOpacity
+          onPress={() => changeStatus("Available")}
           style={{
-            backgroundColor: "#0d75bf",
+            backgroundColor: "green",
             height: 40,
-            width: "70%",
-            marginTop: 40,
-            marginLeft: 37,
+            width: "50%",
+            marginTop: 15,
             justifyContent: "center",
             alignItems: "center",
             borderRadius: 25,
@@ -819,14 +1072,51 @@ label="Wifi"
             style={{
               color: "white",
               fontWeight: "bold",
-              fontSize: 25,
+              fontSize: 18,
               fontStyle: "normal",
             }}
           >
-            Submit
+            Approve
           </Text>
         </TouchableOpacity>
-        )}
+        <TouchableOpacity
+          onPress={() => changeStatus("Rejected")}
+          style={{
+            backgroundColor: "red",
+            height: 40,
+            width: "50%",
+            marginTop: 15,
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: 25,
+            marginVertical: 10,
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 4,
+            },
+            shadowOpacity: 0.3,
+            shadowRadius: 4.65,
+
+            elevation: 9,
+          }}
+          // onPress={AddDevice}
+        >
+          <Text
+            style={{
+              color: "white",
+              fontWeight: "bold",
+              fontSize: 18,
+              fontStyle: "normal",
+            }}
+          >
+            Reject
+          </Text>
+        </TouchableOpacity>
+       </View>
+        
+        </View>
+          
       </ScrollView>
     </ImageBackground>
   );

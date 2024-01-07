@@ -75,7 +75,7 @@ const saveToken = async (token) => {
         alert("User Created Successfully");
         navigation.replace("Home");
       }else{
-         alert(response.data.error)
+         alert(response.data.message)
       }
     
     } catch (error) {
@@ -95,10 +95,12 @@ const saveToken = async (token) => {
         const { token, user } = response.data;
         await saveToken(token); // Save the token after registration
         await saveUser(user); // Save the token after registration
-        alert("Logged in  Successfully");
+        if(user.type=='Emplyee'){
+          navigation.replace("EmployeeDashboard");
+        }
         navigation.replace("Home");
       }else{
-        alert(response.data.error)
+        alert(response.data.message)
      }
      
     } catch (error) {
@@ -228,9 +230,9 @@ const saveToken = async (token) => {
       console.log(response.data)
       if(response.data.success){
         alert("Your Device is Added Successfully.")
-        //navigation.replace("Devices");
+        navigation.replace("Devices");
       }else{
-        //alert(response.data.message);
+        alert(response.data.message);
       }
     } catch (error) {
       throw error;
@@ -264,7 +266,7 @@ const saveToken = async (token) => {
         },
       });
       if(response.data.success){
-        alert("Your Device is Added Successfully.");
+        alert("Your Device is removed Successfully.");
         navigation.replace("Devices");
       }else{
         alert(response.data.message);
@@ -283,7 +285,7 @@ export const createNewBid = async (data) => {
       },
     });
     if(response.data.success){
-      alert("Your Device is Added Successfully.");
+      alert("Your bid placed successfully.");
       return response.data;
     }else{
       alert(response.data.message);
@@ -301,7 +303,6 @@ export const acceptBid = async (status, id, navigate) => {
       },
     });
     if(response.data.success){
-      alert("Your Device is Added Successfully.");
       navigation.replace("Devices");
     }else{
       alert(response.data.message);
@@ -342,11 +343,67 @@ export const getSavedPaymentMethods = async (customerId) => {
   }
 };
 
-
-export const savePaymentMethod = async (paymentMethodId, id, device, navigation) => {
+export const getPaymentMethods = async (customerId) => {
   try {
     const token = await getToken();
-    const response = await api.post('/save-payment-method',  {paymentMethodId:paymentMethodId}, {
+    const response = await api.get(`/get-payment-methods`,{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    if(response.data.success){
+      return response.data.methods
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const setDefaultPaymentMethod = async (method_id) => {
+  try {
+    const token = await getToken();
+    const response = await api.post(`/set-default-method`,  {method_id:method_id},{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    if(response.data.success){
+      alert(response.data.message);
+      return response.data.methods
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const deletePaymentMethod = async (method_id) => {
+  try {
+    const token = await getToken();
+    const response = await api.post(`/delete-method`,  {method_id:method_id},{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+    if(response.data.success){
+      alert(response.data.message);
+      return response.data.methods
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+export const savePaymentMethod = async (paymentMethodId, params, navigation, isSelected) => {
+  try {
+    const token = await getToken();
+    const response = await api.post('/save-payment-method',  {paymentMethodId:paymentMethodId, isDefault:isSelected}, {
       headers: {
         'Authorization': `Bearer ${token}`,
       },
@@ -355,12 +412,17 @@ export const savePaymentMethod = async (paymentMethodId, id, device, navigation)
       await AsyncStorage.removeItem('authUser'); // Remove the token after logout
       await saveUser(response.data.user)
       alert("Payment method saved");
-      navigation.replace("Bidding", {
-        id: id,
-        device: device,
-      });
+      if(params.id !=undefined){
+        navigation.replace("Bidding", {
+          id: params.id,
+          device: params.device,
+        });
+      }else{
+        navigation.pop(1);
+      }
+      
     }else{
-      alert(response.data.error);
+      alert(response.data.message);
     }
   } catch (error) {
     throw error;
@@ -378,7 +440,7 @@ export const futureUseIntent = async () => {
     if(response.data.success){
       return response.data.clientSecret
     }else{
-      alert(response.data.error);
+      alert(response.data.message);
     }
   } catch (error) {
     throw error;
@@ -415,3 +477,205 @@ export const resetPassword = async (data, navigation) => {
     throw error;
   }
 };
+
+
+//////////////////Employeee Function///////////////
+
+export const getOngoinAuctionDevices = async () => {
+  try {
+    const token = await getToken();
+    const response = await api.get('/get-ongoing-auction-devices',{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if(response.data.success){
+      return response.data.devices
+      
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const getNewDevices = async () => {
+  try {
+    const token = await getToken();
+    const response = await api.get('/get-pending-devices',{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if(response.data.success){
+      return response.data.devices
+      
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+export const updateDeviceStatusByEmployee = async (data, navigation) => {
+  try {
+    
+    const token = await getToken();
+    console.log(token)
+    const response = await api.post('/update-device-status-by-employee',  data, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if(response.data.success){
+      alert(response.data.message);
+      navigation.navigate("EmployeeDashboard");
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const getBidDevices = async () => {
+  try {
+    const token = await getToken();
+    const response = await api.get('/get-employee-bid-devices',{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if(response.data.success){
+      return response.data.devices
+      
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const getActivePendingDevices = async () => {
+  try {
+    const token = await getToken();
+    const response = await api.get('/get-active-pending-devices',{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if(response.data.success){
+      return response.data.devices
+      
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+export const getSoldDevices = async () => {
+  try {
+    const token = await getToken();
+    const response = await api.get('/get-sold-devices',{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if(response.data.success){
+      return response.data.devices
+      
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const updateEmployee = async (selectedImage, requestData, navigation) => {
+  try {
+    const formData = new FormData();
+      for (const key in requestData) {
+        if (requestData.hasOwnProperty(key)) {
+          // Check if the property is an array or a nested object
+          if (Array.isArray(requestData[key])) {
+            // Handle arrays by appending each element to the FormData
+            requestData[key].forEach((item, index) => {
+              for (const itemKey in item) {
+                if (item.hasOwnProperty(itemKey)) {
+                  formData.append(`${key}[${index}][${itemKey}]`, item[itemKey]);
+                }
+              }
+            });
+          } else if (typeof requestData[key] === 'object' && requestData[key] !== null) {
+            // Handle nested objects similarly
+            for (const subKey in requestData[key]) {
+              if (requestData[key].hasOwnProperty(subKey)) {
+                formData.append(`${key}[${subKey}]`, requestData[key][subKey]);
+              }
+            }
+          } else {
+            // Handle simple key-value pairs
+            formData.append(key, requestData[key]);
+          }
+        }
+      }
+      const base64Images = await Promise.all(
+        async () => {
+          const imageData = await convertImageToBase64(selectedImage, 0);
+          formData.append('image',imageData)
+        }
+      );
+    
+      console.log(formData)
+      const token = await getToken();
+      const response = await api.post('/device/create', formData, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+           "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log('response.data')
+      console.log(response.data)
+      if(response.data.success){
+        alert("Your Device is Added Successfully.")
+        //navigation.replace("Devices");
+      }else{
+        //alert(response.data.message);
+      }
+  } catch (error) {
+    throw error;
+  }
+}
+
+
+/////////Complaints function //////////////////
+
+export const getUserComplaints = async () => {
+  try {
+    const token = await getToken();
+    const response = await api.get('/get-user-complaints',{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if(response.data.success){
+      return response.data.complaints
+      
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+}

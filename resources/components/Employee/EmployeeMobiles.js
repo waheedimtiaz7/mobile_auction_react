@@ -9,27 +9,24 @@ import {
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { ScrollView } from "react-native";
-import { getDevices, getDeviceDetail } from '../Utils/api'
+import { getOngoinAuctionDevices, getDeviceDetail } from '../../Utils/api'
 
-import AuctionScreen from "../screens/AuctionScreen";
+const EmployeeMobiles = () => {
 
-
-const Mobiles = () => {
-  // const { HighestBid } = useContext(AuctionScreen);
-  const [email, setEmail] = useState(null);
-  const [type, setType] = useState(null);
   const navigation = useNavigation();
   const [data, setData] = useState([]);
+  
   const [highestBids, setHighestBids] = useState({});
   const [loading, setLoading] = useState(true);
+  
   const navigate = (screenName) => {
     navigation.navigate(screenName);
   };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const devices = await getDevices();
+        const devices = await getOngoinAuctionDevices();
+        console.log(devices)
         setData(devices);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -37,7 +34,9 @@ const Mobiles = () => {
         setLoading(false);
       }
     };
-    fetchData();
+    navigation.addListener('focus', () => {
+      fetchData();
+      });
     
   }, []);
   return (
@@ -143,7 +142,7 @@ const Mobiles = () => {
                   >
                     Latest Bid:: {"\b"}
                     </Text>
-                  {item.latestBid?.bid_amount}/Rs
+                  {item.latest_bid?.bid_amount}/Rs
                 </Text>
                 
               </Text>
@@ -178,6 +177,6 @@ const Mobiles = () => {
   );
 };
 
-export default Mobiles;
+export default EmployeeMobiles;
 
 const styles = StyleSheet.create({});

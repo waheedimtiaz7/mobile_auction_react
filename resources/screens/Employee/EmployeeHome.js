@@ -10,11 +10,10 @@ import EmployeeTopBar from "../../components/EmployeeTopBar";
 import { TouchableOpacity } from "react-native";
 import { Image } from "react-native";
 import EmployeeHomeDesign from "../../components/EmployeeHomeDesign";
-import { doc, getDoc } from "firebase/firestore";
-import { auth, db } from "../../../firebase/firebase.config";
-import EmployeeDevices from "../../components/EmployeeDevices";
-import Mobiles from "../../components/Mobiles";
+import EmployeeDevices from "../../components/Employee/EmployeeDevices";
+import EmployeeMobiles from "../../components/Employee/EmployeeMobiles";
 import { useNavigation } from "@react-navigation/native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const EmployeeHome = ({navigation}) => {
   const [email, setEmail] = useState(null);
@@ -24,33 +23,26 @@ const EmployeeHome = ({navigation}) => {
 
 
   useEffect(() => {
-    const readInfo = async () => {
-      const docRef = doc(db, "users", auth.currentUser.uid);
-      const docSnap = await getDoc(docRef);
+    ftechUser = async () => {
+      const userData =  await AsyncStorage.getItem('authUser');
+      if(JSON.parse(userData)){
+        const user = JSON.parse(userData);
 
-      if (docSnap.exists()) {
-        setfname(docSnap.data().fname);
-        setlname(docSnap.data().lname);
-        setDbImage(docSnap.data().picture);
-        setEmail(docSnap.data().email);
+        setfname(user.fname);
+        setlname(user.lname);
+        setDbImage(user.picture);
+        setEmail(user.email);
+        
       }
-    };
-    readInfo();
-  }, [email]);
-  useLayoutEffect(() => {
-    const Notification = () => {
-      Notification.then(() => {
-        navigation.replace("Notification");
-      });
-    };
+    }
+    navigation.addListener('focus', () => {
+    ftechUser();
+    });
+  }, [navigation]);
+  React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <TouchableOpacity
-          onPress={Notification}
-          style={{
-            marginRight: 10,
-          }}
-        >
+        <TouchableOpacity onPress={() => navigation.navigate("")}>
           <Image
             source={{
               uri: "https://www.iconsdb.com/icons/preview/white/bell-2-xl.png",
@@ -58,6 +50,7 @@ const EmployeeHome = ({navigation}) => {
             style={{
               width: 30,
               height: 30,
+              marginRight: 9,
             }}
           />
         </TouchableOpacity>
@@ -71,24 +64,18 @@ const EmployeeHome = ({navigation}) => {
     });
   }, []);
   return (
+    <View style={{ height:"100%" }}>
     <ImageBackground
       source={{
         uri: "https://wallpaperaccess.com/full/449895.jpg",
       }}
+      style={{width: '100%', height: '100%'}}
     >
-      <ScrollView>
-        <View
-          style={{
-            paddingBottom: 50,
-          }}
-        >
-          <EmployeeTopBar />
           <View
             style={{
               flexDirection: "row",
               alignItems: "center",
-
-              height: "32%",
+              height:"30%"
             }}
           >
             <View>
@@ -97,9 +84,9 @@ const EmployeeHome = ({navigation}) => {
                   uri: dbImage,
                 }}
                 style={{
-                  height: 180,
-                  width: 180,
-                  // marginLeft: 160,
+                  height: 100,
+                  width: 100,
+                  marginLeft: 20,
                   borderRadius: 100,
                   top: -2,
                 }}
@@ -113,7 +100,7 @@ const EmployeeHome = ({navigation}) => {
             >
               <Text
                 style={{
-                  fontSize: 26,
+                  fontSize: 20,
                   fontWeight: "bold",
                   fontStyle: "italic",
                 }}
@@ -133,9 +120,7 @@ const EmployeeHome = ({navigation}) => {
               </Text>
 
               <TouchableOpacity
-                onPress={() => navigation.navigate("AdminProfile",{
-                  id: auth.currentUser.uid,
-                })}
+                onPress={() => navigation.navigate("AdminProfile")}
                 style={{
                   alignItems: "center",
                   justifyContent: "center",
@@ -155,11 +140,11 @@ const EmployeeHome = ({navigation}) => {
               </TouchableOpacity>
             </View>
           </View>
-          <Mobiles />
+          <EmployeeMobiles/>
           <EmployeeDevices />
-        </View>
-      </ScrollView>
     </ImageBackground>
+    <EmployeeTopBar />
+    </View>
   );
 };
 

@@ -9,34 +9,62 @@ import {
 import React, { useState, useEffect } from "react";
 import { Image } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { collection, doc, onSnapshot, updateDoc } from "firebase/firestore";
-import { db } from "../../../firebase/firebase.config";
+
+import {getActivePendingDevices, getOngoinAuctionDevices, getNewDevices } from '../../Utils/api'
 
 const MobileScreen = ({ navigation, route }) => {
   const [type, setType] = useState("All");
-  useEffect(() => {}, [type]);
+  const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   useEffect(() => {
-    const ref = collection(db, "mobiles");
-    onSnapshot(ref, (users) =>
-      setData(
-        users.docs.map((user) => ({
-          id: user.id,
-          data: user.data(),
-        }))
-      )
-    );
+    const fetchData = async () => {
+      try {
+        const devices = await getActivePendingDevices();
+        setData(devices);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    navigation.addListener('focus', () => {
+      fetchData();
+      });
   }, []);
-  const changeStatus = async (status, id) => {
-    const washingtonRef = doc(db, "mobiles", id);
 
-    // Set the "capital" field of the city 'DC'
-    await updateDoc(washingtonRef, {
-      status: status,
-    }).then(() => {
-      alert("Device is " + status);
-    });
-  };
+  const getDevicesList = async(type) =>{
+    if(type == 'All'){
+      const devices = await getActivePendingDevices();
+      setData(devices);
+    }else if(type == 'Available'){
+      const ongoing = await getOngoinAuctionDevices();
+      setData(ongoing);
+    }else if(type == 'Pending'){
+      const sold = await getNewDevices();
+      setData(sold);
+    }
+    
+    setType(type);
+}
+const changeStatus = async (status, id) => {
+  if(status == 'Available'){
+    if(SuggestPrice == ''){
+      alert('Please enter suggested price')
+    }else{
+        updateDeviceStatusByEmployee({
+          status:status,
+          suggest_price: SuggestPrice,
+          device_id: id
+        }, navigation)
+    }
+  }else{
+    updateDeviceStatusByEmployee({
+      status:status,
+      suggest_price: 0,
+      device_id: id
+    }, navigation)
+  }
+};
 
   return (
     <ImageBackground
@@ -62,7 +90,7 @@ const MobileScreen = ({ navigation, route }) => {
           >
             <TouchableOpacity
               style={styles.topbutton}
-              onPress={() => setType("All")}
+              onPress={() => getDevicesList("All")}
             >
               <Text
                 style={{
@@ -74,7 +102,7 @@ const MobileScreen = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
              style={styles.topbutton}
-              onPress={() => setType("Pending")}
+              onPress={() => getDevicesList("Pending")}
             >
               <Text
                 style={{
@@ -86,7 +114,7 @@ const MobileScreen = ({ navigation, route }) => {
             </TouchableOpacity>
             <TouchableOpacity
              style={styles.topbutton}
-              onPress={() => setType("Active")}
+              onPress={() => getDevicesList("Available")}
             >
               <Text
                 style={{
@@ -99,7 +127,7 @@ const MobileScreen = ({ navigation, route }) => {
           </View>
           {data.map((item, key) => (
             <View key={key}>
-              {item.data.status === type && (
+              {item.status === type && (
                 <View
                   style={{
                     alignItems: "center",
@@ -109,15 +137,16 @@ const MobileScreen = ({ navigation, route }) => {
                 >
                   <Image
                     source={{
-                      uri: item.data.picture,
+                      uri: item.picture,
                     }}
                     style={{
-                      width: 280,
-                      height: 180,
-                      resizeMode: "contain",
+                      width: 100,
+                      height: 100,
+                      resizeMode: "cover",
                       position: "relative",
-                      top: 50,
+                      top: 20,
                       zIndex: 1400,
+                      borderRadius:100
                     }}
                   />
                   <View
@@ -129,12 +158,11 @@ const MobileScreen = ({ navigation, route }) => {
                       alignItems: "center",
                       backgroundColor: "white",
                       padding: 5,
-                      marginTop: 5,
                       borderRadius: 5,
                       borderTopLeftRadius: 15,
                     }}
                   >
-                    <Text>{item.data.device_name}</Text>
+                    <Text>{item.device_name}</Text>
                     <Text>
                       <Text
                         style={{
@@ -143,7 +171,7 @@ const MobileScreen = ({ navigation, route }) => {
                       >
                         Model:{"\b"}
                       </Text>
-                      {item.data.model}
+                      {item.model}
                     </Text>
                     <Text>
                       <Text
@@ -151,29 +179,64 @@ const MobileScreen = ({ navigation, route }) => {
                           fontWeight: "bold",
                         }}
                       >
-                        {item.data.price}
+                        {item.price}
                       </Text>
                       /Rs
                     </Text>
                   </View>
-
-                  <TouchableOpacity
-                    onPress={() =>
-                      navigation.navigate("Auction", {
-                        id: item.id,
-                      })
-                    }
+                  {item.status !=="Pending" && <TouchableOpacity
                     style={{
                       backgroundColor: "#3346FF",
-                      width: "97%",
                       justifyContent: "center",
                       alignItems: "center",
                       height: 40,
-                      borderBottomRightRadius: 15,
+                      width: "100%",
+                      borderBottomStartRadius: 15,
+                      borderBottomEndRadius: 15,
                       position: "relative",
                       marginTop: 5,
                       top: -25,
                     }}
+                    onPress={() =>
+                      navigation.navigate("Auction", {
+                        id: item.id,
+                        device: item,
+                      })
+                    }
+                  >
+                    <Text
+                      style={{
+                        color: "white",
+                      }}
+                    >
+                      View Details
+                    </Text></TouchableOpacity>}
+                  {
+                    item.status === "Pending" && (<View
+                        style={{
+                          width: "100%",
+                          flexDirection: "row",
+                        }}
+                      >
+                        
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#3346FF",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: 40,
+                      width: "33.33%",
+                      borderBottomLeftRadius: 15,
+                      position: "relative",
+                      marginTop: 5,
+                      top: -25,
+                    }}
+                    onPress={() =>
+                      navigation.navigate("Auction", {
+                        id: item.id,
+                        device: item,
+                      })
+                    }
                   >
                     <Text
                       style={{
@@ -183,22 +246,13 @@ const MobileScreen = ({ navigation, route }) => {
                       View Details
                     </Text>
                   </TouchableOpacity>
-                  {route.params.type === "Employee" &&
-                    item.data.status === "Pending" && (
-                      <View
-                        style={{
-                          width: "100%",
-                          flexDirection: "row",
-                        }}
-                      >
                         <TouchableOpacity
                           style={{
                             backgroundColor: "green",
-                            width: "48%",
                             justifyContent: "center",
                             alignItems: "center",
+                            width: "33.33%",
                             height: 40,
-                            borderBottomLeftRadius: 15,
                             position: "relative",
                             marginTop: 5,
                             top: -25,
@@ -206,6 +260,7 @@ const MobileScreen = ({ navigation, route }) => {
                           onPress={() =>
                             navigation.navigate("priceSuggest", {
                               id: item.id,
+                              device: item,
                             })
                           }
                         >
@@ -214,15 +269,15 @@ const MobileScreen = ({ navigation, route }) => {
                               color: "white",
                             }}
                           >
-                            Accept
+                            Approve
                           </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={{
                             backgroundColor: "red",
-                            width: "48%",
                             justifyContent: "center",
                             alignItems: "center",
+                            width: "33.33%",
                             height: 40,
                             borderBottomRightRadius: 15,
                             position: "relative",
@@ -239,7 +294,9 @@ const MobileScreen = ({ navigation, route }) => {
                             Reject
                           </Text>
                         </TouchableOpacity>
-                      </View>
+                       
+                    
+                    </View>
                     )}
                 </View>
               )}
@@ -253,16 +310,16 @@ const MobileScreen = ({ navigation, route }) => {
                 >
                   <Image
                     source={{
-                      uri: item.data.picture,
+                      uri: item.picture,
                     }}
                     style={{
-                      width: 280,
-                      height: 180,
-
-                      resizeMode: "contain",
+                      width: 100,
+                      height: 100,
+                      resizeMode: "cover",
                       position: "relative",
-                      top: 50,
+                      top: 40,
                       zIndex: 1400,
+                      borderRadius:100
                     }}
                   />
                   <View
@@ -273,13 +330,12 @@ const MobileScreen = ({ navigation, route }) => {
                       justifyContent: "space-between",
                       alignItems: "center",
                       backgroundColor: "white",
-                      padding: 5,
-                      marginTop: 5,
+                      padding: 10,
                       borderRadius: 5,
                       borderTopLeftRadius: 15,
                     }}
                   >
-                    <Text>{item.data.device_name}</Text>
+                    <Text>{item.device_name}</Text>
                     <Text>
                       <Text
                         style={{
@@ -288,7 +344,7 @@ const MobileScreen = ({ navigation, route }) => {
                       >
                         Model:{"\b"}
                       </Text>
-                      {item.data.model}
+                      {item.model}
                     </Text>
                     <Text>
                       <Text
@@ -296,7 +352,7 @@ const MobileScreen = ({ navigation, route }) => {
                           fontWeight: "bold",
                         }}
                       >
-                        {item.data.price}
+                        {item.price}
                       </Text>
                       /Rs
                     </Text>
@@ -314,18 +370,18 @@ const MobileScreen = ({ navigation, route }) => {
                       >
                         Status:{"\b"}
                       </Text>
-                      {item.data.status}
+                      {item.status}
                     </Text>
                   </View>
-
-                  <TouchableOpacity
+                  {item.status !=="Pending" && <TouchableOpacity
                     style={{
                       backgroundColor: "#3346FF",
-                      width: "97%",
                       justifyContent: "center",
                       alignItems: "center",
                       height: 40,
-                      borderBottomRightRadius: 15,
+                      width: "100%",
+                      borderBottomStartRadius: 15,
+                      borderBottomEndRadius: 15,
                       position: "relative",
                       marginTop: 5,
                       top: -25,
@@ -333,6 +389,41 @@ const MobileScreen = ({ navigation, route }) => {
                     onPress={() =>
                       navigation.navigate("Auction", {
                         id: item.id,
+                        device: item,
+                      })
+                    }
+                  >
+                    <Text
+                      style={{
+                        color: "white",
+                      }}
+                    >
+                      View Details
+                    </Text></TouchableOpacity>}
+                  {
+                    item.status === "Pending" && (<View
+                        style={{
+                          width: "100%",
+                          flexDirection: "row",
+                        }}
+                      >
+                        
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#3346FF",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: 40,
+                      width: "33.33%",
+                      borderBottomLeftRadius: 15,
+                      position: "relative",
+                      marginTop: 5,
+                      top: -25,
+                    }}
+                    onPress={() =>
+                      navigation.navigate("Auction", {
+                        id: item.id,
+                        device: item,
                       })
                     }
                   >
@@ -344,42 +435,38 @@ const MobileScreen = ({ navigation, route }) => {
                       View Details
                     </Text>
                   </TouchableOpacity>
-                  {route.params.type === "Employee" &&
-                    item.data.status === "Pending" && (
-                      <View
-                        style={{
-                          width: "100%",
-                          flexDirection: "row",
-                        }}
-                      >
                         <TouchableOpacity
                           style={{
                             backgroundColor: "green",
-                            width: "48%",
                             justifyContent: "center",
                             alignItems: "center",
+                            width: "33.33%",
                             height: 40,
-                            borderBottomLeftRadius: 15,
                             position: "relative",
                             marginTop: 5,
                             top: -25,
                           }}
-                          onPress={() => changeStatus("Active", item.id)}
+                          onPress={() =>
+                            navigation.navigate("priceSuggest", {
+                              id: item.id,
+                              device: item,
+                            })
+                          }
                         >
                           <Text
                             style={{
                               color: "white",
                             }}
                           >
-                            Accept
+                            Approve
                           </Text>
                         </TouchableOpacity>
                         <TouchableOpacity
                           style={{
                             backgroundColor: "red",
-                            width: "48%",
                             justifyContent: "center",
                             alignItems: "center",
+                            width: "33.33%",
                             height: 40,
                             borderBottomRightRadius: 15,
                             position: "relative",
@@ -396,7 +483,9 @@ const MobileScreen = ({ navigation, route }) => {
                             Reject
                           </Text>
                         </TouchableOpacity>
-                      </View>
+                       
+                    
+                    </View>
                     )}
                 </View>
               )}

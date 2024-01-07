@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, Button, StyleSheet, ImageBackground } from 'react-native';
+import Checkbox from 'expo-checkbox';
 import { CardField, useStripe, StripeProvider, useConfirmPayment } from '@stripe/stripe-react-native';
 import { savePaymentMethod, futureUseIntent } from '../Utils/api';
 
@@ -8,6 +9,7 @@ const PaymentMethodScreen = ({route, navigation}) => {
     const { confirmSetupIntent, loading } = useStripe();
 
   const [clientSecret, setClientSecret] = useState(false);
+  const [isSelected, setSelection] = useState(false);
 
   useEffect(() => {
     ftechSecret = async () => {
@@ -27,7 +29,7 @@ const PaymentMethodScreen = ({route, navigation}) => {
         } else if (setupIntent) {
           console.log('SetupIntent confirmed:', setupIntent);
           // Save the payment method ID to your backend
-          savePaymentMethod(setupIntent.paymentMethod.id, route.params.id, route.params.device, navigation);
+          savePaymentMethod(setupIntent.paymentMethod.id, route.params, navigation, isSelected);
         }
       } catch (error) {
         console.error('Error confirming SetupIntent:', error);
@@ -61,9 +63,18 @@ const PaymentMethodScreen = ({route, navigation}) => {
                 }}
                 style={styles.cardField}
             />
-
+            <View style={{ display:'flex',flexDirection:"row", marginBottom:10}}>
+            <Text>Is Default?</Text>
+            <Checkbox
+                value={isSelected}
+                onValueChange={setSelection}
+                style={styles.checkbox}
+              />
+              
+              
+            </View>
             <Button
-                    title="Confirm Payment"
+                    title="Submit"
                     onPress={handlePaymentConfirmation}
                     disabled={loading}
                 />
