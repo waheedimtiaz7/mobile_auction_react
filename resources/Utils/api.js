@@ -66,7 +66,7 @@ const saveToken = async (token) => {
 
   export const registerUser = async (user, navigation) => {
     try {
-      const response = await api.post('/register', {user});
+      const response = await api.post('/register', user);
       if(response.data.success){
         const { token } = response.data;
         const { user } = response.data;
