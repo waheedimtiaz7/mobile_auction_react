@@ -95,10 +95,12 @@ const saveToken = async (token) => {
         const { token, user } = response.data;
         await saveToken(token); // Save the token after registration
         await saveUser(user); // Save the token after registration
-        if(user.type=='Emplyee'){
+        if(user.type=='Employee'){
           navigation.replace("EmployeeDashboard");
+        }else{
+          navigation.replace("Home");
         }
-        navigation.replace("Home");
+       
       }else{
         alert(response.data.message)
      }
@@ -716,6 +718,25 @@ export const updateEmployee = async (selectedImage, requestData, navigation) => 
 
 /////////Complaints function //////////////////
 
+export const getEmployeeComplaints = async () => {
+  try {
+    const token = await getToken();
+    const response = await api.get('/get-employee-complaints',{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if(response.data.success){
+      return response.data.complaints
+      
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
 export const getUserComplaints = async () => {
   try {
     const token = await getToken();

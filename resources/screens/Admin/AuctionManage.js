@@ -214,9 +214,9 @@ const AuctionManage = () => {
                           fontSize: 10,
                         }}
                       >
-                        Buyer
+                        Bidder
                       </Text>
-                      {(item.status === "Sold" || item.status === "In Transit") && (<SingleBidder user={item.bidder} />)}
+                      {(item.status === "Sold" || item.status === "In Transit") && (<SingleBidder user={item.accepted_bid.user} />)}
                       {item.status === "Available" && <SingleBidder user={item.latest_bid.user} />}
                     </View>
                   </View>

@@ -51,6 +51,8 @@ import Complaints from "./resources/screens/UserComplaintsList";
 import PaymentMethods from "./resources/screens/UserPaymentMethodsList";
 import Profile from "./resources/screens/profile";
 import NewComplaint from "./resources/screens/NewComplaint";
+import EmployeeAccount from "./resources/screens/Employee/EmployeeAccount";
+import EmployeeComplaints from "./resources/screens/Employee/EmployeeComplaints";
 
 async function registerForPushNotificationsAsync() {
 
@@ -435,6 +437,34 @@ export default function App() {
             },
           }}
           component={NewComplaint}
+        />
+        <Stack.Screen
+          name="EmployeeComplaints"
+          options={{
+            title: "Complaints",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontStyle: "italic",
+              fontSize: 20,
+              fontWeight: "bold",
+              color: "#00BFFF",
+            },
+          }}
+          component={EmployeeComplaints}
+        />
+        <Stack.Screen
+          name="EmployeeAccount"
+          options={{
+            title: "Account",
+            headerTitleAlign: "center",
+            headerTitleStyle: {
+              fontStyle: "italic",
+              fontSize: 20,
+              fontWeight: "bold",
+              color: "#00BFFF",
+            },
+          }}
+          component={EmployeeAccount}
         />
       </Stack.Navigator>
     </NavigationContainer>

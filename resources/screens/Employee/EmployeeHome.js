@@ -120,7 +120,7 @@ const EmployeeHome = ({navigation}) => {
               </Text>
 
               <TouchableOpacity
-                onPress={() => navigation.navigate("AdminProfile")}
+                onPress={() => navigation.navigate("EmployeeAccount")}
                 style={{
                   alignItems: "center",
                   justifyContent: "center",

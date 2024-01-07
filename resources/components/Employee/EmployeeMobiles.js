@@ -49,7 +49,7 @@ const EmployeeMobiles = () => {
       >
         <Text
           style={{
-            fontSize: 20,
+            fontSize: 16,
             marginBottom: 20,
             marginTop: 10,
             marginLeft: 10,
@@ -104,19 +104,19 @@ const EmployeeMobiles = () => {
               <Text
                 style={{
                   fontWeight: "bold",
-                  fontSize: 25,
+                  fontSize: 18,
                 }}
               >
                 {item.device_name}
               </Text>
               <Text
                 style={{
-                  fontSize: 18,
+                  fontSize: 14,
                 }}
               >
                 <Text
                   style={{
-                    fontSize: 20,
+                    fontSize: 16,
                     fontWeight: "bold",
                   }}
                 >
@@ -136,7 +136,7 @@ const EmployeeMobiles = () => {
                 >
                   <Text
                     style={{
-                      fontSize: 17,
+                      fontSize: 14,
                       fontWeight: "bold",
                     }}
                   >

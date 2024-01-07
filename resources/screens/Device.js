@@ -29,6 +29,7 @@ const Device = () => {
             setUserId(type);
         }else{
           const myDevices = await getMyDevices();
+          console.log(myDevices)
             setData(myDevices);
             setUserId(type);
         }
@@ -114,8 +115,8 @@ const Device = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          {data.map((item, key) => (
-            <View key={key}>
+          
+            <View >
               {userId !== "All" && (
                 <MyDevices data={data} />
               )}
@@ -123,7 +124,6 @@ const Device = () => {
                 <AllDevices data={data} />
               )}
             </View>
-          ))}
         </ScrollView>
       </View>
     </ImageBackground>

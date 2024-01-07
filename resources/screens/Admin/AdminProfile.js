@@ -170,8 +170,8 @@ const styles = StyleSheet.create({
     borderRadius: 40,
     marginTop: 10,
     width: "70%",
-    marginLeft: 45,
-    marginTop: 40,
+    alignSelf:"center",
+    marginBottom: 10,
   },
   updateButtonText: {
     color: "#00BFFF",

@@ -30,29 +30,27 @@ import {
     
         
           {data.map((item, key) => (
-            <View key={key} >
+            <View key={key} style={{
+              width:"95%",
+              alignSelf:"center",
+              alignItems: "center",
+              padding: 10,
+              borderRadius: 10,
+            }}>
              
-                <View
-                  style={{
-                    alignItems: "center",
-                    // margin: 5,
-                    // backgroundColor:'white',
-                    padding: 10,
-                    borderRadius: 10,
-                  }}
-                >
+                
                   <Image
                     source={{
                       uri: item.picture,
                     }}
                     style={{
-                      width: 280,
-                      height: 180,
-                      // borderRadius:100,
+                      width: 100,
+                      height: 100,
+                       borderRadius:100,
                       // backgroundColor:'white',
                       resizeMode: "contain",
                       position: "relative",
-                      top: 50,
+                      top: 40,
                       zIndex: 1400,
                     }}
                   />
@@ -105,7 +103,6 @@ import {
                       {item.status}
                     </Text>
                   </View>
-                  </View>
                   <TouchableOpacity
                       style={{
                         backgroundColor: "#0d75bf",
@@ -121,6 +118,7 @@ import {
                       onPress={() =>
                         navigation.navigate("Auction", {
                           id: item.id,
+                          device: item,
                         })
                       }
                     >

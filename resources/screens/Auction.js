@@ -12,7 +12,7 @@ import { TextInput } from "react-native-paper";
 import { fetchDevice } from '../Utils/api'
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { useNavigation } from "@react-navigation/native";
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
 const Auction = ({ navigation, route }) => {
   // const navigation = useNavigation();
   // const navigate = (screenName) => {
@@ -21,12 +21,22 @@ const Auction = ({ navigation, route }) => {
 
   const [mobile_id, setMobile_id] = useState(route.params.id);
   const [device, setDevice] = useState(route.params.device);
+  const [userData, setUserData] = useState();
   useEffect(() => {
     ftechDeviceData = async () => {
       const data = await fetchDevice(mobile_id);
       setDevice(data);
    }
    ftechDeviceData();
+   ftechUser = async () => {
+    const userData =  await AsyncStorage.getItem('authUser');
+    if(JSON.parse(userData)){
+      const user = JSON.parse(userData);
+      setUserData(user)
+      
+    }
+};
+ftechUser();
   }, []);
   return (
     <ImageBackground
@@ -951,7 +961,7 @@ marginBottom:5,
           </View>
         </View>
 
-        {route.params.type === "User" && (
+        {userData && userData.type === "Customer" && (
           <TouchableOpacity
             onPress={async () => {
               try {
