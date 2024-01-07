@@ -359,7 +359,7 @@ export const acceptBid = async (status, id, navigation) => {
       },
     });
     if(response.data.success){
-      navigation.pop(1);
+      navigation.replace('Home');
     }else{
       alert(response.data.message);
     }

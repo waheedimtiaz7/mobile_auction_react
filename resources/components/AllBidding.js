@@ -86,7 +86,7 @@ const AllBidding = ({deviceData, bids}) => {
              
                 
             </View>
-            {device.is_owner==true &&  item.status!=="Hold" && device.device_status!=="Hold" && (
+            {device.is_owner==true &&  item.status!=="Hold" && device.status!=="Sold" && (
            
             <TouchableOpacity
               style={{

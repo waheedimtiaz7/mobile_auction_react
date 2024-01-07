@@ -100,7 +100,7 @@ import {
                       {item.status}
                     </Text>
                   </View>
-                  <TouchableOpacity
+                  {(item.status=='Pending'||item.status=='Available')&&<TouchableOpacity
                       style={{
                         backgroundColor: "#0d75bf",
                         width: "96%",
@@ -125,7 +125,7 @@ import {
                       >
                         Edit Details
                       </Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity>}
              
             </View>
           ))}

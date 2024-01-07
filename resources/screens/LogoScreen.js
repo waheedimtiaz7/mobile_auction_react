@@ -18,6 +18,8 @@ const LogoScreen = ({ navigation }) => {
           navigation.navigate("Start");
         }
       
+    }else{
+      navigation.navigate("Start");
     }
   }
   return (
