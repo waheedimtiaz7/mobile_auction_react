@@ -76,19 +76,19 @@ import {
             }}
             >
             {data.map((item, key) => (
-            <View key={key}  style={{
-                display:"flex",
-                flexDirection:"column",
-                backgroundColor: "white",
-                borderRadius: 25,
-                width: "90%",
-                height: 150,
-                alignItems:"center",
-                justifyContent:"center",
-                alignSelf:"center",
-                marginBottom:10,
-                gap:20
-            }}>
+                <View key={key}  style={{
+                    display:"flex",
+                    flexDirection:"column",
+                    backgroundColor: "white",
+                    borderRadius: 25,
+                    width: "90%",
+                    height: 150,
+                    alignItems:"center",
+                    justifyContent:"center",
+                    alignSelf:"center",
+                    marginBottom:10,
+                    gap:20
+                }}>
                 <View style={{ flexDirection:"column", gap:30 }}>
                     <View>
                         <Text style={{
@@ -169,9 +169,9 @@ import {
                         >
                             Delete
                         </Text>
-                    </TouchableOpacity>}
+                    </TouchableOpacity>
                 </View>
-            
+            </View>))}
             </ScrollView>
             <TouchableOpacity
                     onPress={()=>{

@@ -679,3 +679,23 @@ export const getUserComplaints = async () => {
     throw error;
   }
 }
+
+export const createComplaint = async () => {
+  try {
+    const token = await getToken();
+    const response = await api.get('/create-complaint',{
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if(response.data.success){
+      return response.data.complaints
+      
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
