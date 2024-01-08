@@ -27,7 +27,10 @@ const Auction = ({ navigation, route }) => {
       const data = await fetchDevice(mobile_id);
       setDevice(data);
    }
-   ftechDeviceData();
+   navigation.addListener('focus', () => {
+    ftechDeviceData();
+    });
+   
    ftechUser = async () => {
     const userData =  await AsyncStorage.getItem('authUser');
     if(JSON.parse(userData)){

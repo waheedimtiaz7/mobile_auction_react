@@ -37,7 +37,9 @@ const Mobiles = () => {
         setLoading(false);
       }
     };
-    fetchData();
+    navigation.addListener('focus', () => {
+      fetchData();
+      });
     
   }, []);
   return (

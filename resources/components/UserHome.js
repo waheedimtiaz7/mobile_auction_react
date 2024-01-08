@@ -31,7 +31,9 @@ const UserHome = () => {
         setLoading(false);
       }
     };
-    fetchData();
+    navigation.addListener('focus', () => {
+      fetchData();
+      });
   }, []);
 
   return (

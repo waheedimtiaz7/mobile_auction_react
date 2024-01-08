@@ -20,8 +20,8 @@ const AllBidding = ({deviceData, bids}) => {
     navigation.navigate(screenName);
   };
   useEffect(() => {
-    console.log(data)
-  }, []);
+    console.log(bids)
+  }, [deviceData, bids]);
   const changeStatus = async (id) => {
 
     await acceptBid(

@@ -333,7 +333,7 @@ const saveToken = async (token) => {
       throw error;
     }
   };
-export const createNewBid = async (data) => {
+export const createNewBid = async (data, navigation) => {
   try {
     const token = await getToken();
     const response = await api.post('/device/create-new-bid',  data, {
@@ -342,9 +342,10 @@ export const createNewBid = async (data) => {
         'Content-Type': 'application/json',
       },
     });
+    console.log(response)
     if(response.data.success){
       alert("Your bid placed successfully.");
-      return response.data.device;
+      navigation.pop(1)
     }else{
       alert(response.data.message);
     }
@@ -787,7 +788,7 @@ export const deleteComplaint = async (data, navigation) => {
     });
 
     if(response.data.success){
-      alert("Your complaint registered successfully our staff will contact you soon.")
+      alert("Your complaint has been deleted successfully")
       return response.data.complaints;
     }else{
       alert(response.data.message);
