@@ -4,8 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native";
 import { TouchableOpacity } from "react-native";
 import { Image } from "react-native";
-import { signOut } from "firebase/auth";
-import { auth } from "../../firebase/firebase.config";
+import { logoutUser } from '../Utils/api';
 
 const EmployeeTopBar = () => {
   const navigation = useNavigation();
@@ -13,9 +12,7 @@ const EmployeeTopBar = () => {
     navigation.navigate(screenName);
   };
   const logout = () => {
-    signOut(auth).then(() => {
-      navigation.replace("Login");
-    });
+    logoutUser(navigation);
   };
   return (
     <SafeAreaView style={styles.container}>

@@ -9,14 +9,12 @@ import {
   import React, { useContext, useEffect, useState } from "react";
   import { useNavigation } from "@react-navigation/native";
   import { ScrollView } from "react-native";
-  import { getUserComplaints, getDeviceDetail } from '../Utils/api'
+  import { getUserComplaints, deleteComplaint } from '../Utils/api'
   
   const UserComplaintsList = () => {
   
     const navigation = useNavigation();
     const [data, setData] = useState([]);
-    
-    const [highestBids, setHighestBids] = useState({});
     const [loading, setLoading] = useState(true);
     
     const navigate = (screenName) => {
@@ -38,6 +36,13 @@ import {
         });
       
     }, []);
+
+    const removeComplaint = async(complaint_id) =>{
+      const data = await deleteComplaint(complaint_id);
+      setData(data);
+    
+    }
+
     return (
         <ImageBackground
         source={{
@@ -110,7 +115,7 @@ import {
                 </View>
                 <View style={{ flexDirection:"row", gap:10, width:"90%", alignSelf:"center",alignItems:"center",justifyContent:'center'}}>
                         <TouchableOpacity
-                        onPress={()=>deleteComplaint(item.id)}
+                        onPress={()=>removeComplaint(item.id)}
                             style={{
                             backgroundColor: 'red',
                             borderRadius: 90,

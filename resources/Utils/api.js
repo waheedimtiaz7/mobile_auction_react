@@ -344,7 +344,7 @@ export const createNewBid = async (data) => {
     });
     if(response.data.success){
       alert("Your bid placed successfully.");
-      return response.data;
+      return response.data.device;
     }else{
       alert(response.data.message);
     }
@@ -769,6 +769,26 @@ export const createComplaint = async (data, navigation) => {
     if(response.data.success){
       alert("Your complaint registered successfully our staff will contact you soon.")
       navigation.replace("Complaints");
+    }else{
+      alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const deleteComplaint = async (data, navigation) => {
+  try {
+    const token = await getToken();
+    const response = await api.post('/delete-complaint', data, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if(response.data.success){
+      alert("Your complaint registered successfully our staff will contact you soon.")
+      return response.data.complaints;
     }else{
       alert(response.data.message);
     }

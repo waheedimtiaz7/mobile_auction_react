@@ -30,7 +30,7 @@ const AuctionScreen = ({ navigation, route }) => {
 
   const Bidding = async () => {
    
-    if(user.payment_methods.length>0){
+    if(user.payment_methods.length > 0){
       if(Bid_amount==''){
         alert("Please provide bid amount")
       }
@@ -41,6 +41,10 @@ const AuctionScreen = ({ navigation, route }) => {
           device_id: mobile_id,
           status: "Pending"
         });
+        if(docRef){
+          setDevice(docRef);
+          setBids(docRef.bids);
+        }
       }else{
         alert("Bid amount should be greater than suggested price and highest bid")
       }
