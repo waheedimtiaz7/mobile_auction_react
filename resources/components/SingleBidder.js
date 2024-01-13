@@ -5,7 +5,6 @@ import { Image } from 'react-native';
 import { TextInput } from 'react-native-paper';
 
 const SingleBidder = ({user}) => {
-  console.log(user)
     const {fname, lname, picture} = user;
     const [dbImage, setDbImage] = useState(picture);
     useEffect(() => {

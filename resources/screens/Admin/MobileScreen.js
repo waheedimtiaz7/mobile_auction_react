@@ -173,16 +173,13 @@ const changeStatus = async (status, id) => {
                       </Text>
                       {item.model}
                     </Text>
-                    <Text>
                       <Text
                         style={{
                           fontWeight: "bold",
                         }}
                       >
-                        {item.price}
+                        ${item.price}
                       </Text>
-                      /Rs
-                    </Text>
                   </View>
                   {item.status !=="Pending" && <TouchableOpacity
                     style={{
@@ -346,16 +343,13 @@ const changeStatus = async (status, id) => {
                       </Text>
                       {item.model}
                     </Text>
-                    <Text>
                       <Text
                         style={{
                           fontWeight: "bold",
                         }}
                       >
-                        {item.price}
+                        ${item.price}
                       </Text>
-                      /Rs
-                    </Text>
                   </View>
                   <View
                     style={{

@@ -24,7 +24,7 @@ const SingleBid = ({bid}) => {
         }}
       >
         
-        {BidAmount}
+        ${BidAmount}
       </Text>
       </Text>
       <Text>Status:{"\b"}

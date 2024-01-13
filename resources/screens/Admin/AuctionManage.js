@@ -12,11 +12,11 @@ import { useNavigation } from "@react-navigation/native";
 import SingleBidder from "../../components/SingleBidder";
 import OwnerDet from "../../components/OwnerDet";
 import SingleBid from "../../components/SingleBid";
-
-import {getBidDevices, getOngoinAuctionDevices, getSoldDevices } from '../../Utils/api'
-import AllDevices from "../../components/AllDevices";
-import EmployeeDevices from "../../components/Employee/EmployeeDevices";
-import EmployeeMobiles from "../../components/Employee/EmployeeMobiles";
+import Modal from "react-native-modal";
+import DropDownPicker from 'react-native-dropdown-picker';
+import {getBidDevices, getOngoinAuctionDevices, getSoldDevices, updateSoldStatus } from '../../Utils/api'
+import { Button } from "react-native-paper";
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const AuctionManage = () => {
   const navigation = useNavigation();
@@ -24,6 +24,40 @@ const AuctionManage = () => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [type, setType] = useState("All");
+  const [item, setItem] = useState();
+  const [isStatusModalVisible, setStatusModal] = useState(false);
+  const [isDetailModelVisible, setDetailModal] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState([]);
+  const toggleStatusModal = (item) => {
+    console.log(item)
+    if(item !==''){
+      if(item.status == 'Sold'){
+          setItems([
+            {label: 'In Transit', value: 'In Transit'},
+            {label: 'Received By Buyer', value: 'Received By Buyer'},
+            {label: 'Closed', value: 'Closed'}
+          ])
+      }else if(item.status == 'In Transit'){
+        setItems([
+          {label: 'Received By Buyer', value: 'Received By Buyer'},
+          {label: 'Closed', value: 'Closed'}
+        ])
+      } else if(item.status == 'Received By Buyer'){
+        setItems([
+          {label: 'Closed', value: 'Closed'}
+        ])
+      }
+      setItem(item)
+    }
+    
+    setStatusModal(!isStatusModalVisible);
+  };
+  const toggleDetailModal = (item) => {
+    setItem(item)
+    setDetailModal(!isDetailModelVisible);
+  };
   useEffect(() => {}, [type]);
  
   useEffect(() => {
@@ -54,8 +88,19 @@ const AuctionManage = () => {
         const sold = await getSoldDevices();
         setData(sold);
       }
-      
       setType(type);
+  }
+  const updateStatus = async()=>{
+    setLoading(true)
+    const devices = await updateSoldStatus({device_id:item.id, status:value});
+    if(!devices){
+     setLoading(false)
+    }else{
+      setData(devices);
+      setLoading(false)
+      toggleStatusModal('');
+    }
+    
   }
   return (
     <ImageBackground
@@ -112,9 +157,8 @@ const AuctionManage = () => {
               </Text>
             </TouchableOpacity>
           </View>
-          {data.map((item, key) => (
+          {data && data.map((item, key) => (
             <View key={key}>
-              
                 <View
                   style={{
                     flexDirection: "column",
@@ -162,7 +206,7 @@ const AuctionManage = () => {
                           fontWeight: "bold",
                         }}
                       >
-                        Product
+                        Device
                       </Text>
                       <Image
                         source={{
@@ -220,12 +264,157 @@ const AuctionManage = () => {
                       {item.status === "Available" && <SingleBidder user={item.latest_bid.user} />}
                     </View>
                   </View>
+                  {item.status =="Available" && <TouchableOpacity
+                    style={{
+                      backgroundColor: "#3346FF",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: 40,
+                      width: "90%",
+                      alignSelf:'center',
+                      borderBottomStartRadius: 15,
+                      borderBottomEndRadius: 15,
+                      position: "relative",
+                      marginTop: 5,
+                      top: -25,
+                    }}
+                    onPress={()=>{toggleDetailModal(item)}}
+                  >
+                    <Text
+                      style={{
+                        color: "white",
+                      }}
+                    >
+                      View Details
+                    </Text></TouchableOpacity>}
+                  {(item.status === "Sold" || item.status === "In Transit" || item.status === "Received By Buyer") && (<View
+                        style={{
+                          width: "90%",
+                          alignSelf:"center",
+                          flexDirection: "row",
+                        }}
+                      >
+                        
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#3346FF",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: 40,
+                      width: "50%",
+                      borderBottomLeftRadius: 15,
+                      borderTopLeftRadius: 3,
+                      position: "relative",
+                      top: -25,
+                    }}
+                    onPress={()=>{toggleDetailModal(item)}}
+                  >
+                    <Text
+                      style={{
+                        color: "white",
+                      }}
+                    >
+                      View Details
+                    </Text>
+                  </TouchableOpacity>
+                        <TouchableOpacity
+                          disabled={loading}
+                          style={{
+                            backgroundColor: "green",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            width: "50%",
+                            height: 40,
+                            borderBottomRightRadius: 15,
+                            borderTopRightRadius: 3,
+                            position: "relative",
+                            top: -25,
+                          }}
+                          onPress={()=>{toggleStatusModal(item)}}
+                        >
+                          <Text
+                            style={{
+                              color: "white",
+                            }}
+                          >
+                            Update Status
+                          </Text>
+                        </TouchableOpacity>
+                    </View>
+                    )}
                 </View>
-             
-            
             </View>
           ))}
         </ScrollView>
+        <Modal isVisible={isStatusModalVisible} onBackButtonPress={() => toggleStatusModal('')} 
+      animationIn="slideInUp" animationInTiming={200} animationOut="bounceOut">
+        <View style={{ flex: 1,zIndex:11111,justifyContent:"center" }}>
+          <View style={{ height:300, width:"90%",borderRadius:40, alignSelf:"center",justifyContent:"center", alignItems:"center", backgroundColor:"white" }}>
+              
+              <View style={{width:"90%",alignSelf:"center"}}>
+                <Text>Select Status</Text>
+                <View>
+                <DropDownPicker
+                    open={open}
+                    value={value}
+                    items={items}
+                    setOpen={setOpen}
+                    setValue={setValue}
+                    setItems={setItems}
+                  />
+                </View>
+                <TouchableOpacity
+                    style={{
+                      backgroundColor: "green",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "50%",
+                      alignSelf:"center",
+                      height: 40,
+                      top:30,
+                      borderRadius:10,
+                      position: "relative",
+                    }}
+                    onPress={()=>{updateStatus('')}}
+                  >
+                    <Text
+                      style={{
+                        color: "white",
+                      }}
+                    >
+                      Update Status
+                    </Text>
+                  </TouchableOpacity>
+              </View>
+          </View>
+          
+        </View>
+      </Modal>
+      <Modal isVisible={isDetailModelVisible} onBackButtonPress={() => toggleDetailModal('')} 
+      animationIn="slideInUp" animationInTiming={200} animationOut="bounceOut">
+        <View style={{ flex: 1,zIndex:11111,justifyContent:"center" }}>
+            
+            {isDetailModelVisible && <View style={{ height:500, width:"100%",borderRadius:40, alignSelf:"center", backgroundColor:"white" }}>
+                <View style={{width:"90%",alignSelf:"center"}}>
+                  
+                  <TouchableOpacity
+                      style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        width: 20,
+                        height: 40,
+                        position: "relative",
+                        alignSelf:"flex-end"
+                      }}
+                      onPress={()=>{toggleDetailModal('')}}
+                    >
+                    <Icon name="close" size={20} color="gray" />
+                    </TouchableOpacity>
+                    <Text>{item.device_name}</Text>
+                </View>
+            </View>}
+          </View>
+      </Modal>
       </View>
     </ImageBackground>
   );

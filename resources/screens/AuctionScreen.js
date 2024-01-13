@@ -23,9 +23,9 @@ const AuctionScreen = ({ navigation, route }) => {
     const fetchData = async () => {
       try {
         const devices = await fetchDevice(mobile_id);
-        console.log(devices)
+        // console.log(devices)
         setDevice(devices);
-        setBids(devices.bids);
+        // setBids(devices.bids);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
@@ -34,49 +34,49 @@ const AuctionScreen = ({ navigation, route }) => {
     };
     navigation.addListener('focus', () => {
       fetchData();
-      });
+    });
     ftechUser = async () => {
-        const userData =  await AsyncStorage.getItem('authUser');
-        if(JSON.parse(userData)){
-          setUser(JSON.parse(userData))
-        }
+      const userData = await AsyncStorage.getItem('authUser');
+      if (JSON.parse(userData)) {
+        setUser(JSON.parse(userData))
+      }
     };
     ftechUser();
-    
-  },[]);
+
+  }, []);
 
   const Bidding = async () => {
-   
-    if(user.payment_methods.length > 0){
-      if(Bid_amount==''){
+
+    if (user.payment_methods.length > 0) {
+      if (Bid_amount == '') {
         alert("Please provide bid amount")
       }
-      else if (Bid_amount>=device.suggest_price && (!device.highest_bid?.bid_amount || Bid_amount>device.highest_bid?.bid_amount)) {
+      else if (Bid_amount >= device.suggest_price && (!device.highest_bid?.bid_amount || Bid_amount > device.highest_bid?.bid_amount)) {
         const docRef = await createNewBid({
           bid_amount: Bid_amount,
           device_id: mobile_id,
           status: "Pending"
         }, navigation);
-        
-      }else{
+
+      } else {
         alert("Bid amount should be greater than suggested price and highest bid")
       }
-    }else{
-      navigation.navigate("PaymentMethodScreen",{
+    } else {
+      navigation.navigate("PaymentMethodScreen", {
         id: route.params.id,
         device: route.params.device,
       })
     }
-    
+
   };
-  
-    // Format the countdown time into HH:MM:SS
-    const formatCountdown = () => {
-      const hours = Math.floor(countdown / 3600);
-      const minutes = Math.floor((countdown % 3600) / 60);
-      const seconds = countdown % 60;
-      return `${hours}:${minutes}:${seconds}`;
-    };
+
+  // Format the countdown time into HH:MM:SS
+  // const formatCountdown = () => {
+  //   const hours = Math.floor(countdown / 3600);
+  //   const minutes = Math.floor((countdown % 3600) / 60);
+  //   const seconds = countdown % 60;
+  //   return `${hours}:${minutes}:${seconds}`;
+  // };
 
 
   return (
@@ -89,7 +89,7 @@ const AuctionScreen = ({ navigation, route }) => {
         height: "100%",
       }}
     >
-      {device!=null &&<KeyboardAwareScrollView
+      {device != null && <KeyboardAwareScrollView
         style={{
           height: "100%",
           width: "100%",
@@ -126,11 +126,18 @@ const AuctionScreen = ({ navigation, route }) => {
         </View>
         <View
           style={{
-            width:"90%",
-            alignSelf:"center"
+            width: "90%",
+            alignSelf: "center"
           }}
         >
-          <View>
+          <View  style={{
+            borderWidth: 1,
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
+            borderRadius: 5,
+          }}>
+          <View >
             <Text
               style={{
                 fontSize: 20,
@@ -138,7 +145,7 @@ const AuctionScreen = ({ navigation, route }) => {
               }}
             >
               Seller Price::
-              <Text>{device.price}</Text>/Rs
+              $<Text>{device.price}</Text>
             </Text>
           </View>
           <View
@@ -153,7 +160,7 @@ const AuctionScreen = ({ navigation, route }) => {
               }}
             >
               Suggested Price::
-              <Text>{device.suggestPrice}</Text>/Rs
+              $<Text>{device.suggest_price}</Text>
             </Text>
           </View>
           <View
@@ -167,101 +174,82 @@ const AuctionScreen = ({ navigation, route }) => {
                 fontWeight: "bold",
               }}
             >
-              Highest Bid:: {device.highest_bid?.bid_amount}/Rs
+              Highest Bid:: ${device.highest_bid?.bid_amount}
             </Text>
           </View>
-          <View
-            style={{
-              marginTop: 10,
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: "bold",
-              }}
-            >
-              Remaining Time::{" "}
-              <Text
-                style={{
-                  color: "green",
-                }}
-              >
-                {formatCountdown()}
-              </Text>{" "}
-            </Text>
           </View>
+
 
           {!device.is_owner && (
             <>
-             <View
+              <View
                 style={{
-                  marginTop: 20,
+                  marginTop: 30,
                 }}
               >
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: "bold",
-              fontStyle: "italic",
-              color: "white",
-            }}
-          >
-            Place Your Bid
-          </Text>
-        </View>
-            <View
-              style={{
-                flexDirection: "row",
-                width:"100%",
-                marginTop: 10,
-              }}
-            >
-              <View style={{ width:"60%",marginEnd:10 }}>
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: "bold",
+                    fontStyle: "italic",
+                    color: "white",
+                  }}
+                >
+                  Place Your Bid
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  width: "100%",
+                  marginTop: 10,
+                }}
+              >
+                <View style={{ width: "60%", marginEnd: 10 }}>
                   <Input
-                    placeholder="Enter your Bid"
+                    placeholder="Enter your Bid $"
                     value={Bid_amount}
                     onchange={(text) => setBid_amount(text)}
                     mode="outlined"
                     keyboard="number-pad"
                     is_secure={false}
                     is_required={true}
-                />
+                  />
                 </View>
-              
 
-              <TouchableOpacity
-                onPress={Bidding}
-                style={{
-                  height: 50,
-                  width:"30%",
-                  paddingHorizontal: 5,
-                  backgroundColor: "#0d75bf",
-                  justifyContent: "center",
-                  borderRadius: 5,
-                  // marginTop:90,
-                  marginLeft: 0,
-                }}
-              >
-                <Text
+
+                <TouchableOpacity
+                  onPress={Bidding}
                   style={{
-                    textAlign:"center",
-                    color: "#fff",
-                    fontSize: 16,
-                    fontWeight: "bold",
-                    fontStyle: "italic",
+                    height: 50,
+                    width: "30%",
+                    paddingHorizontal: 5,
+                    backgroundColor: "#0d75bf",
+                    justifyContent: "center",
+                    borderRadius: 5,
+                    // marginTop:90,
+                    marginLeft: 0,
                   }}
                 >
-                  Place Bid
-                </Text>
-              </TouchableOpacity>
-            </View>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      color: "#fff",
+                      fontSize: 16,
+                      fontWeight: "bold",
+                      fontStyle: "italic",
+                    }}
+                  >
+                    Place Bid
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </>
           )}
-          {bids.length>0&&<AllBidding deviceData={device} bids={bids} />}
+          {bids.length > 0 && <AllBidding deviceData={device} bids={bids} />}
         </View>
 
-        
+
       </KeyboardAwareScrollView>}
     </ImageBackground>
   );

@@ -26,20 +26,20 @@ const Auction = ({ navigation, route }) => {
     ftechDeviceData = async () => {
       const data = await fetchDevice(mobile_id);
       setDevice(data);
-   }
-   navigation.addListener('focus', () => {
-    ftechDeviceData();
-    });
-   
-   ftechUser = async () => {
-    const userData =  await AsyncStorage.getItem('authUser');
-    if(JSON.parse(userData)){
-      const user = JSON.parse(userData);
-      setUserData(user)
-      
     }
-};
-ftechUser();
+    navigation.addListener('focus', () => {
+      ftechDeviceData();
+    });
+
+    ftechUser = async () => {
+      const userData = await AsyncStorage.getItem('authUser');
+      if (JSON.parse(userData)) {
+        const user = JSON.parse(userData);
+        setUserData(user)
+
+      }
+    };
+    ftechUser();
   }, []);
   return (
     <ImageBackground
@@ -59,15 +59,15 @@ ftechUser();
       >
         <View
           style={{
-            
+
           }}
         >
           <Text
             style={{
               fontSize: 25,
-              textAlign:"center",
+              textAlign: "center",
               color: "#ACFF05",
-              
+
               textAlign: "center",
               fontWeight: "bold",
             }}
@@ -78,14 +78,15 @@ ftechUser();
         <ScrollView
           horizontal
           showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ 
-            alignItems:"center"}}
+          contentContainerStyle={{
+            alignItems: "center"
+          }}
           style={{
             position: "relative",
             paddingTop: 2,
             paddingBottom: 8,
-            width:"90%",
-            alignSelf:"center",
+            width: "90%",
+            alignSelf: "center",
           }}
         >
           <Image
@@ -94,8 +95,7 @@ ftechUser();
             }}
             style={{
               height: 200,
-              width: 150,
-              alignSelf:"center"
+              width: 350,
             }}
           />
         </ScrollView>
@@ -103,9 +103,9 @@ ftechUser();
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
           }}
         >
@@ -138,8 +138,8 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Operating System{"\b"}
@@ -154,8 +154,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 User Interface{"\b"}
@@ -170,8 +170,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Dimensions{"\b"}
@@ -186,8 +186,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Weight{"\b"}
@@ -202,8 +202,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Color{"\b"}
@@ -218,8 +218,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Sim{"\b"}
@@ -230,15 +230,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -249,15 +249,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -268,15 +268,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -287,15 +287,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -306,15 +306,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -325,15 +325,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -346,9 +346,9 @@ marginBottom:5,
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
             marginTop: 10,
           }}
@@ -357,7 +357,7 @@ borderColor: "white",
             style={{
               fontSize: 18,
               color: "#333",
-              
+
               fontWeight: "bold",
               marginLeft: 10,
             }}
@@ -383,8 +383,8 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 CPU{"\b"}
@@ -399,8 +399,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 GPU{"\b"}
@@ -411,15 +411,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -430,15 +430,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -451,9 +451,9 @@ marginBottom:5,
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
             marginTop: 10,
           }}
@@ -462,7 +462,7 @@ borderColor: "white",
             style={{
               fontSize: 18,
               color: "#333",
-              
+
               fontWeight: "bold",
               marginLeft: 10,
             }}
@@ -488,8 +488,8 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Size{"\b"}
@@ -504,8 +504,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Resolution{"\b"}
@@ -516,15 +516,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -535,15 +535,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -555,9 +555,9 @@ marginBottom:5,
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
             marginTop: 10,
           }}
@@ -566,7 +566,7 @@ borderColor: "white",
             style={{
               fontSize: 18,
               color: "#333",
-              
+
               fontWeight: "bold",
               marginLeft: 10,
             }}
@@ -592,8 +592,8 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 RAM{"\b"}
@@ -608,8 +608,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 ROM{"\b"}
@@ -623,8 +623,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 SDCard {"\b"}
@@ -635,15 +635,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -654,15 +654,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -672,15 +672,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -692,9 +692,9 @@ marginBottom:5,
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
             marginTop: 10,
           }}
@@ -728,7 +728,7 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  marginBottom:5,
+                  marginBottom: 5,
                 }}
               >
                 Bluetooth{"\b"}
@@ -743,8 +743,8 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Wifi{"\b"}
@@ -755,15 +755,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -774,15 +774,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -794,9 +794,9 @@ marginBottom:5,
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
             marginTop: 10,
             marginBottom: 5,
@@ -806,7 +806,7 @@ borderColor: "white",
             style={{
               fontSize: 18,
               color: "#333",
-              
+
               fontWeight: "bold",
               marginLeft: 10,
             }}
@@ -832,8 +832,8 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Battery {"\b"}
@@ -844,15 +844,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -864,9 +864,9 @@ marginBottom:5,
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
             marginBottom: 6,
           }}
@@ -875,7 +875,7 @@ borderColor: "white",
             style={{
               fontSize: 18,
               color: "#333",
-              
+
               fontWeight: "bold",
               marginLeft: 10,
             }}
@@ -901,8 +901,8 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Seller Price{"\b"}
@@ -916,8 +916,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Suggested Price{"\b"}
@@ -928,37 +928,37 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
-                {device.price}
+               ${device.price}
               </Text>
               <Text
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 30,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
-                {device.suggestPrice}
+                ${device.suggest_price}
               </Text>
             </View>
           </View>
@@ -983,7 +983,7 @@ marginBottom:5,
               width: "70%",
               marginTop: 40,
               marginBottom: 40,
-              alignSelf:"center",
+              alignSelf: "center",
               justifyContent: "center",
               alignItems: "center",
               borderRadius: 25,

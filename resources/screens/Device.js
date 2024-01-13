@@ -25,11 +25,9 @@ const Device = () => {
       if(type == 'All'){
             const devices = await getDevices();
             setData(devices);
-            console.log(devices)
             setUserId(type);
         }else{
           const myDevices = await getMyDevices();
-          console.log(myDevices)
             setData(myDevices);
             setUserId(type);
         }

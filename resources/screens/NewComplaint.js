@@ -27,6 +27,12 @@ const NewComplaint = ({ navigation }) => {
   }, []);
 
   const createNewComplaint = async() =>{
+
+    // const complaintCount = await AsyncStorage.getItem(`complaintCount_${email}`);
+    // if (complaintCount && parseInt(complaintCount) >= 3) {
+    //   alert('You have reached the maximum limit of complaints for today (3 complaints).');
+    //   return;
+    // }
       if(name==''){
         alert('Name is required')
       }if(email==''){
@@ -43,6 +49,8 @@ const NewComplaint = ({ navigation }) => {
         subject:subject,
         details:details
       }
+      // const updatedCount = (parseInt(complaintCount) || 0) + 1;
+      // AsyncStorage.setItem(`complaintCount_${email}`, updatedCount.toString());
       createComplaint(data, navigation)
 
   }

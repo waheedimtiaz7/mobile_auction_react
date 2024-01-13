@@ -55,7 +55,9 @@ const HomeScreen = ({ navigation }) => {
                 marginTop: 10
               }}
             >
-              <TouchableOpacity onPress={() => navigation.navigate("Device Form")} >
+              <TouchableOpacity 
+              // onPress={() => navigation.navigate("Device Form")}
+               >
                 <Image
                   style={{ width: 500, height: 200, marginRight: 5 }}
                   source={require("../../assets/images/01.png")}
@@ -83,7 +85,9 @@ const HomeScreen = ({ navigation }) => {
                   source={require("../../assets/images/03.png")}
                 />
               </TouchableOpacity>
-              <TouchableOpacity  onPress={() => navigation.navigate("AllMobiles")}>
+              <TouchableOpacity 
+              //  onPress={() => navigation.navigate("AllMobiles")}
+               >
                 <Image
                   style={{
                     width: 500,

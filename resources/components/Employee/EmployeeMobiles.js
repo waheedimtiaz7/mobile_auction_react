@@ -107,6 +107,9 @@ const EmployeeMobiles = () => {
                   fontSize: 18,
                 }}
               >
+                <Text>
+                  Name:
+                </Text>
                 {item.device_name}
               </Text>
               <Text
@@ -116,19 +119,14 @@ const EmployeeMobiles = () => {
               >
                 <Text
                   style={{
-                    fontSize: 16,
+                    fontSize: 14,
                     fontWeight: "bold",
                   }}
                 >
                   Model::
-                </Text>
-                {"\n"}{item.model}
+                </Text>{item.model}
               </Text>
-              <Text
-                style={{
-                 
-                }}
-              >
+             
                 <Text
                   style={{
                     fontWeight: "bold",
@@ -136,16 +134,14 @@ const EmployeeMobiles = () => {
                 >
                   <Text
                     style={{
-                      fontSize: 14,
+                      fontSize: 12,
                       fontWeight: "bold",
                     }}
                   >
                     Latest Bid:: {"\b"}
                     </Text>
-                  {item.latest_bid?.bid_amount}/Rs
+                  ${item.latest_bid?.bid_amount}
                 </Text>
-                
-              </Text>
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("Auction", {

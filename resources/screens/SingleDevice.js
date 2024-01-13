@@ -70,7 +70,6 @@ const SingleDevice = ({ navigation, route }) => {
         setResolution(device.resolution);
         setOwnerId(device.ownerId);
         setStatus(device.status);
-        console.log(device.status)
       }
   }, [route.params.device]);
   const update = async () => {

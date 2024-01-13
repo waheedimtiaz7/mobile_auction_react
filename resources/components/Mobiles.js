@@ -145,7 +145,7 @@ const Mobiles = () => {
                   >
                     Latest Bid:: {"\b"}
                     </Text>
-                  {item.latest_bid?.bid_amount}/Rs
+                    ${item.latest_bid?.bid_amount}
                 </Text>
                 
               </Text>

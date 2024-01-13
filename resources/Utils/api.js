@@ -156,12 +156,9 @@ const saveToken = async (token) => {
         }
           if(selectedImage!='' && selectedImage!=null){
             const imageData = await convertImageToBase64(selectedImage, 0);
-            console.log(imageData)
             formData.append('image',imageData);
           }
-            
-        
-        console.log(formData)
+      
         const token = await getToken();
         const response = await api.post('/update-profile', formData, {
           headers: {
@@ -276,7 +273,6 @@ const saveToken = async (token) => {
         })
       );
     
-      console.log(formData)
       const token = await getToken();
       const response = await api.post('/device/create', formData, {
         headers: {
@@ -284,8 +280,6 @@ const saveToken = async (token) => {
            "Content-Type": "multipart/form-data",
         },
       });
-      console.log('response.data')
-      console.log(response.data)
       if(response.data.success){
         alert("Your Device is Added Successfully.")
         navigation.pop(1);
@@ -342,7 +336,6 @@ export const createNewBid = async (data, navigation) => {
         'Content-Type': 'application/json',
       },
     });
-    console.log(response)
     if(response.data.success){
       alert("Your bid placed successfully.");
       navigation.pop(1)
@@ -517,9 +510,9 @@ export const createPaymentIntent = async (amount) => {
 
 export const forgetPassword = async (email, navigation) => {
   try {
-    const response = await api.post('/forget-password', { email:email });
+    const response = await api.post('/forgot-password', { email:email });
     if(response.data.success){
-      navigation.navigate('ResetPassword')
+      navigation.navigate('ResetPassword',{email:email})
     }
   } catch (error) {
     throw error;
@@ -583,7 +576,6 @@ export const updateDeviceStatusByEmployee = async (data, navigation) => {
   try {
     
     const token = await getToken();
-    console.log(token)
     const response = await api.post('/update-device-status-by-employee',  data, {
       headers: {
         'Authorization': `Bearer ${token}`,
@@ -690,12 +682,9 @@ export const updateEmployee = async (selectedImage, requestData, navigation) => 
       }
         if(selectedImage!='' && selectedImage!=null){
           const imageData = await convertImageToBase64(selectedImage, 0);
-          console.log(imageData)
           formData.append('image',imageData);
         }
           
-      
-      console.log(formData)
       const token = await getToken();
       const response = await api.post('/update-profile', formData, {
         headers: {
@@ -792,6 +781,27 @@ export const deleteComplaint = async (data, navigation) => {
       return response.data.complaints;
     }else{
       alert(response.data.message);
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+export const updateSoldStatus = async (data, navigation) => {
+  try {
+    const token = await getToken();
+    const response = await api.post('/update-sold-device-status', data, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+      },
+    });
+
+    if(response.data.success){
+      alert("Device status has been updated")
+      console.log(response.data)
+      return response.data.devices;
+    }else{
+      alert(response.data.message);
+      return false;
     }
   } catch (error) {
     throw error;

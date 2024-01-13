@@ -38,7 +38,6 @@ import {
     }, []);
 
     const removeComplaint = async(complaint_id) =>{
-      console.log(complaint_id)
       const data = await deleteComplaint({complaint_id:complaint_id});
       setData(data);
     

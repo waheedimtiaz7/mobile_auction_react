@@ -11,14 +11,14 @@ import { Image, ImageBackground } from "react-native";
 import { TextInput } from "react-native-paper";
 import { updateDeviceStatusByEmployee, getDeviceDetail } from '../../Utils/api'
 
-const PriceSuggestionScreen = ({navigation,route}) => {
+const PriceSuggestionScreen = ({ navigation, route }) => {
   // const navigation = useNavigation();
   // const navigate = (screenName) => {
   //   navigation.navigate(screenName);
   // };
   const [mobile_id, setMobile_id] = useState(route.params.id);
   const [device, setDevice] = useState(route.params.device);
-  
+
   const [OS, setOS] = useState("");
   const [UI, setUI] = useState("");
   const [Dimensions, setDimensions] = useState("");
@@ -45,51 +45,51 @@ const PriceSuggestionScreen = ({navigation,route}) => {
   const [dbImage, setDbImage] = useState(null);
   useEffect(() => {
     const readInfo = async () => {
-     
-        setDevice_name(device.device_name);
-        setModel(device.model);
-        setDbImage(device.picture);
-        setOS(device.os);
-        setUI(device.ui);
-        setBattery(device.battery);
-        setBluetooth(device.bluetooth);
-        setCPU(device.cpu);
-        setGPU(device.gpu);
-        setDimensions(device.dimensions);
-        setColor(device.color);
-        setRAM(device.ram);
-        setROM(device.rom);
-        setSize(device.size);
-        setSDCard(device.sdcard);
-        setSim(device.sim);
-        setWeight(device.weight);
-        setPrice(device.price);
-        setWifi(device.wifi);
-        setResolution(device.resolution);
-        setSts(device.status);
-        setS_Price(device.SuggestPrice);
-        
+
+      setDevice_name(device.device_name);
+      setModel(device.model);
+      setDbImage(device.picture);
+      setOS(device.os);
+      setUI(device.ui);
+      setBattery(device.battery);
+      setBluetooth(device.bluetooth);
+      setCPU(device.cpu);
+      setGPU(device.gpu);
+      setDimensions(device.dimensions);
+      setColor(device.color);
+      setRAM(device.ram);
+      setROM(device.rom);
+      setSize(device.size);
+      setSDCard(device.sdcard);
+      setSim(device.sim);
+      setWeight(device.weight);
+      setPrice(device.price);
+      setWifi(device.wifi);
+      setSts(device.status);
+      setResolution(device.resolution);
+
+
     };
     readInfo();
   }, [route.params.id]);
   const changeStatus = async (status) => {
-      if(status == 'Available'){
-        if(SuggestPrice == ''){
-          alert('Please enter suggested price')
-        }else{
-            updateDeviceStatusByEmployee({
-              status:status,
-              suggest_price: SuggestPrice,
-              device_id: device.id
-            }, navigation)
-        }
-      }else{
+    if (status == 'Available') {
+      if (SuggestPrice == '') {
+        alert('Please enter suggested price')
+      } else {
         updateDeviceStatusByEmployee({
-          status:status,
-          suggest_price: 0,
+          status: status,
+          suggest_price: SuggestPrice,
           device_id: device.id
         }, navigation)
       }
+    } else {
+      updateDeviceStatusByEmployee({
+        status: status,
+        suggest_price: 0,
+        device_id: device.id
+      }, navigation)
+    }
   };
   return (
     <ImageBackground
@@ -109,15 +109,15 @@ const PriceSuggestionScreen = ({navigation,route}) => {
         <View
           style={{
             width: "90%",
-            alignSelf:"center"
+            alignSelf: "center"
           }}
         >
           <Text
             style={{
               fontSize: 25,
-              textAlign:"center",
+              textAlign: "center",
               color: "#ACFF05",
-              
+
               textAlign: "center",
               fontWeight: "bold",
             }}
@@ -125,45 +125,47 @@ const PriceSuggestionScreen = ({navigation,route}) => {
             {device.device_name} {device.model}
           </Text>
         </View>
-        
-          <Image
-            source={{
-              uri: device.picture,
-            }}
-            style={{
-              height: 150,
-              width: 150,
-              borderRadius: 100,
-              marginBottom:10,
-              alignSelf:"center"
-            }}
-          />
-          <View style={{ width:"90%", alignSelf:"center", borderWidth:1, borderColor: "white",
-            borderRadius: 5,padding:10, marginBottom:10}}>
-            <Text style={{ fontWeight:'bold', fontSize:20 }}>Owner Detail</Text>
-              <View style={{ flexDirection:"row", gap:10}}>
-                  <View style={{ width:"50%"}}>
-                    <Text style={{ fontWeight:'bold' }}>Name</Text>
-                    <Text style={{ color:'white' }}>{ device.user.fname+' '+device.user.lname }</Text>
-                  </View>
-                  <View style={{ width:"50%"}}>
-                    <Text style={{ fontWeight:'bold' }}>Phone</Text>
-                    <Text style={{ color:'white' }}>{device.user.phone}</Text>
-                  </View>
-                  
-              </View>
-              <View style={{ flexDirection:"row", gap:10}}>
-              <View >
-                    <Text style={{ fontWeight:'bold' }}>Email</Text>
-                    <Text style={{ color:'white' }}>{device.user.email}</Text>
-                  </View>
-              </View>
+
+        <Image
+          source={{
+            uri: device.picture,
+          }}
+          style={{
+            height: 150,
+            width: 150,
+            borderRadius: 100,
+            marginBottom: 10,
+            alignSelf: "center"
+          }}
+        />
+        <View style={{
+          width: "90%", alignSelf: "center", borderWidth: 1, borderColor: "white",
+          borderRadius: 5, padding: 10, marginBottom: 10
+        }}>
+          <Text style={{ fontWeight: 'bold', fontSize: 20 }}>Owner Detail</Text>
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <View style={{ width: "50%" }}>
+              <Text style={{ fontWeight: 'bold' }}>Name</Text>
+              <Text style={{ color: 'white' }}>{device.user.fname + ' ' + device.user.lname}</Text>
+            </View>
+            <View style={{ width: "50%" }}>
+              <Text style={{ fontWeight: 'bold' }}>Phone</Text>
+              <Text style={{ color: 'white' }}>{device.user.phone}</Text>
+            </View>
+
           </View>
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <View >
+              <Text style={{ fontWeight: 'bold' }}>Email</Text>
+              <Text style={{ color: 'white' }}>{device.user.email}</Text>
+            </View>
+          </View>
+        </View>
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-            alignSelf:"center",
+            width: "90%",
+            alignSelf: "center",
             borderColor: "white",
             borderRadius: 5,
           }}
@@ -197,8 +199,8 @@ const PriceSuggestionScreen = ({navigation,route}) => {
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Operating System{"\b"}
@@ -213,8 +215,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 User Interface{"\b"}
@@ -229,8 +231,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Dimensions{"\b"}
@@ -245,8 +247,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Weight{"\b"}
@@ -261,8 +263,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Color{"\b"}
@@ -277,8 +279,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Sim{"\b"}
@@ -289,15 +291,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -308,15 +310,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -327,15 +329,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -346,15 +348,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -365,15 +367,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -384,15 +386,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -405,9 +407,9 @@ marginBottom:5,
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
             marginTop: 10,
           }}
@@ -416,7 +418,7 @@ borderColor: "white",
             style={{
               fontSize: 18,
               color: "#333",
-              
+
               fontWeight: "bold",
               marginLeft: 10,
             }}
@@ -442,8 +444,8 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 CPU{"\b"}
@@ -458,8 +460,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 GPU{"\b"}
@@ -470,15 +472,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -489,15 +491,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -510,9 +512,9 @@ marginBottom:5,
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
             marginTop: 10,
           }}
@@ -521,7 +523,7 @@ borderColor: "white",
             style={{
               fontSize: 18,
               color: "#333",
-              
+
               fontWeight: "bold",
               marginLeft: 10,
             }}
@@ -547,8 +549,8 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Size{"\b"}
@@ -563,8 +565,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Resolution{"\b"}
@@ -575,15 +577,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -594,15 +596,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -614,9 +616,9 @@ marginBottom:5,
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
             marginTop: 10,
           }}
@@ -625,7 +627,7 @@ borderColor: "white",
             style={{
               fontSize: 18,
               color: "#333",
-              
+
               fontWeight: "bold",
               marginLeft: 10,
             }}
@@ -651,8 +653,8 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 RAM{"\b"}
@@ -667,8 +669,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 ROM{"\b"}
@@ -682,8 +684,8 @@ marginBottom:5,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 SDCard {"\b"}
@@ -694,15 +696,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -713,15 +715,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -731,15 +733,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -751,9 +753,9 @@ marginBottom:5,
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
             marginTop: 10,
           }}
@@ -787,7 +789,7 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  marginBottom:5,
+                  marginBottom: 5,
                 }}
               >
                 Bluetooth{"\b"}
@@ -802,8 +804,8 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Wifi{"\b"}
@@ -814,15 +816,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -833,15 +835,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -853,9 +855,9 @@ marginBottom:5,
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
             marginTop: 10,
             marginBottom: 5,
@@ -865,7 +867,7 @@ borderColor: "white",
             style={{
               fontSize: 18,
               color: "#333",
-              
+
               fontWeight: "bold",
               marginLeft: 10,
             }}
@@ -891,8 +893,8 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Battery {"\b"}
@@ -903,15 +905,15 @@ marginBottom:5,
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
@@ -923,9 +925,9 @@ marginBottom:5,
         <View
           style={{
             borderWidth: 1,
-            width:"90%",
-alignSelf:"center",
-borderColor: "white",
+            width: "90%",
+            alignSelf: "center",
+            borderColor: "white",
             borderRadius: 5,
             marginBottom: 6,
           }}
@@ -934,7 +936,7 @@ borderColor: "white",
             style={{
               fontSize: 18,
               color: "#333",
-              
+
               fontWeight: "bold",
               marginLeft: 10,
             }}
@@ -960,163 +962,132 @@ borderColor: "white",
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                 }}
               >
                 Seller Price{"\b"}
               </Text>
-              <Text
-                style={{
-                  fontSize: 15,
-                  fontWeight: "bold",
-                  color: "white",
-                  borderWidth: 1,
-                  borderColor: "blue",
-                  borderRadius: 5,
-                  paddingHorizontal: 10,
-                  
-marginBottom:5,
-                }}
-              >
-                Suggested Price{"\b"}
-              </Text>
+
             </View>
             <View style={{ marginLeft: 15 }}>
               <Text
                 style={{
                   fontSize: 15,
                   color: "black",
-                  
+
                   marginLeft: 50,
                   textAlign: "center",
                   borderWidth: 1,
                   borderColor: "blue",
                   borderRadius: 5,
                   paddingHorizontal: 10,
-                  
-marginBottom:5,
+
+                  marginBottom: 5,
                   fontWeight: "bold",
                 }}
               >
-                {device.price}
+                ${device.price}
               </Text>
-              <Text
-                style={{
-                  fontSize: 15,
-                  color: "black",
-                  
-                  marginLeft: 50,
-                  textAlign: "center",
-                  borderWidth: 1,
-                  borderColor: "blue",
-                  borderRadius: 5,
-                  paddingHorizontal: 30,
-                  
-marginBottom:5,
-                  fontWeight: "bold",
-                }}
-              >
-                {device.suggestPrice}
-              </Text>
+
             </View>
           </View>
-        </View> 
-        <View style={{ width:"90%", alignSelf:"center"}}>
-          <Text>Suggested Price *</Text>
-        <TextInput
-          
-          placeholder="Enter suggested price"
-          style={{
-            marginVertical: 5,
-            backgroundColor: "white",
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 4,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: 4.65,
-
-            elevation: 8,
-          }}
-          value={SuggestPrice}
-          onChangeText={(text) => setSuggestPrice(text)}
-          
-        />
-       <View style={{ flexDirection:"row", alignSelf:'center', gap:10,marginBottom:10}}>
-       <TouchableOpacity
-          onPress={() => changeStatus("Available")}
-          style={{
-            backgroundColor: "green",
-            height: 40,
-            width: "50%",
-            marginTop: 15,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 25,
-            marginVertical: 10,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 4,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: 4.65,
-
-            elevation: 9,
-          }}
-          // onPress={AddDevice}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontWeight: "bold",
-              fontSize: 18,
-              fontStyle: "normal",
-            }}
-          >
-            Approve
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => changeStatus("Rejected")}
-          style={{
-            backgroundColor: "red",
-            height: 40,
-            width: "50%",
-            marginTop: 15,
-            justifyContent: "center",
-            alignItems: "center",
-            borderRadius: 25,
-            marginVertical: 10,
-            shadowColor: "#000",
-            shadowOffset: {
-              width: 0,
-              height: 4,
-            },
-            shadowOpacity: 0.3,
-            shadowRadius: 4.65,
-
-            elevation: 9,
-          }}
-          // onPress={AddDevice}
-        >
-          <Text
-            style={{
-              color: "white",
-              fontWeight: "bold",
-              fontSize: 18,
-              fontStyle: "normal",
-            }}
-          >
-            Reject
-          </Text>
-        </TouchableOpacity>
-       </View>
-        
         </View>
-          
+        <View style={{ width: "90%", alignSelf: "center" }}>
+          <Text>Suggested Price *</Text>
+          <TextInput
+
+            placeholder="Enter suggested price"
+            style={{
+              marginVertical: 5,
+              backgroundColor: "white",
+              shadowColor: "#000",
+              shadowOffset: {
+                width: 0,
+                height: 4,
+              },
+              shadowOpacity: 0.3,
+              shadowRadius: 4.65,
+
+              elevation: 8,
+            }}
+            value={SuggestPrice}
+            onChangeText={(text) => setSuggestPrice(text)}
+
+          />
+          <View style={{ flexDirection: "row", alignSelf: 'center', gap: 10, marginBottom: 10 }}>
+            <TouchableOpacity
+              onPress={() => changeStatus("Available")}
+              style={{
+                backgroundColor: "green",
+                height: 40,
+                width: "50%",
+                marginTop: 15,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 25,
+                marginVertical: 10,
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 4,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: 4.65,
+
+                elevation: 9,
+              }}
+            // onPress={AddDevice}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  fontStyle: "normal",
+                }}
+              >
+                Approve
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => changeStatus("Rejected")}
+              style={{
+                backgroundColor: "red",
+                height: 40,
+                width: "50%",
+                marginTop: 15,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 25,
+                marginVertical: 10,
+                shadowColor: "#000",
+                shadowOffset: {
+                  width: 0,
+                  height: 4,
+                },
+                shadowOpacity: 0.3,
+                shadowRadius: 4.65,
+
+                elevation: 9,
+              }}
+            // onPress={AddDevice}
+            >
+              <Text
+                style={{
+                  color: "white",
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  fontStyle: "normal",
+                }}
+              >
+                Reject
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+        </View>
+
       </ScrollView>
     </ImageBackground>
   );

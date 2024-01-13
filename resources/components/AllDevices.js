@@ -12,7 +12,6 @@ import {
   import { ScrollView } from "react-native";
 
   const AllDevices = ({data}) => {
-    console.log(data)
     const [userId, setUserId] = useState("");
     const [loading, setLoading] = useState(true);
     const navigation = useNavigation();
@@ -48,7 +47,7 @@ import {
                       height: 100,
                        borderRadius:100,
                       // backgroundColor:'white',
-                      resizeMode: "contain",
+                      resizeMode: "cover",
                       position: "relative",
                       top: 40,
                       zIndex: 1400,
@@ -57,18 +56,20 @@ import {
                   <View
                     style={{
                       flexDirection: "row",
-                      height: 100,
-                      width: "100%",
-                      justifyContent: "space-between",
+                      height: 150,
+                      width: "80%",
+                      justifyContent: "space-evenly",
                       alignItems: "center",
                       backgroundColor: "#D0EAF6",
                       padding: 5,
-                      marginTop: 5,
-                      borderRadius: 5,
-                      borderTopLeftRadius: 15,
+                      marginTop: 'relative',
+                      borderRadius: 10,
                     }}
                   >
-                    <Text>{item.device_name}</Text>
+                    <Text><Text style={{
+                        fontWeight: "bold",
+                      }}>Device Name:</Text>{item.device_name}</Text>
+                    <Text>Model</Text>
                     <Text
                       style={{
                         fontWeight: "bold",
@@ -82,9 +83,9 @@ import {
                           fontWeight: "bold",
                         }}
                       >
-                        {item.price}
+                        ${item.price}
                       </Text>
-                      /Rs
+                      
                     </Text>
                   </View>
                   <View

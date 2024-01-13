@@ -13,7 +13,7 @@ export default ForgetPassword = ({ navigation }) => {
       if(email==''){
         alert('Email is required');
       } else{
-        forgetPassword(email, password, navigation, deviceToken);
+        forgetPassword(email, navigation);
       }
     
   };

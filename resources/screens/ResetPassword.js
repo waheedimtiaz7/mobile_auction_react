@@ -18,7 +18,9 @@ export default ResetPassword = ({ route, navigation }) => {
       }else if(password!==cpassword){
         alert('Password and confirma password did not matched');
       } else{
-            resetPassword({email, password, code}, navigation);
+        const data ={
+          email:email, password:password, otp:code}
+            resetPassword(data, navigation);
       }
     
   };
@@ -50,7 +52,7 @@ export default ResetPassword = ({ route, navigation }) => {
       <View
         style={{
           marginLeft: 50,
-          marginTop: 60,
+          marginTop: 30,
           backgroundColor: "#00BFFF",
         }}
       >
@@ -68,16 +70,17 @@ export default ResetPassword = ({ route, navigation }) => {
             Verification Code
           </Text>
           <Input
-              icon="envelope"
+              icon="fax"
               placeholder="Code"
-              value={email}
               onchange={(text) => setCode(text)}
               mode="outlined"
+              editable='false'
               keyboard="number-pad"
               is_secure={false}
               is_required={true}
             />
         </View>
+        
         <View
           style={{
             marginBottom: 5,
@@ -93,8 +96,8 @@ export default ResetPassword = ({ route, navigation }) => {
           </Text>
           <Input
               icon="lock"
-              placeholder="Confirm Password"
-              value={cpassword}
+              placeholder="New Password"
+              value={password}
               onchange={(text) => setPassword(text)}
               mode="outlined"
               keyboard="default"

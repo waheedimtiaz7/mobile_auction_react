@@ -43,7 +43,6 @@ import SingleBidder from "./resources/components/SingleBidder";
 
 import SingleBid from "./resources/components/SingleBid";
 import OwnerDet from "./resources/components/OwnerDet";
-import Appointment from "./resources/screens/Employee/Appointment";
 
 ////////////////User Account Screens//////////////
 import Account from "./resources/screens/Account";
@@ -380,7 +379,6 @@ export default function App() {
         <Stack.Screen name="SingleBidder" component={SingleBidder} />
         <Stack.Screen name="Owner" component={OwnerDet} />
         <Stack.Screen name="SingleBid" component={SingleBid} />
-        <Stack.Screen name="meeting" component={Appointment} />
         {/* User Account Routes */}
         <Stack.Screen
           name="Account"
