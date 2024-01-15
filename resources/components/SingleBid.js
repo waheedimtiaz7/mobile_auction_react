@@ -13,30 +13,17 @@ const SingleBid = ({bid}) => {
     };
     readInfo();
   }, []);
-  // console.log(BidAmount);
+  console.log(BidAmount);
   return (
-    <View>
-    <Text>Bid Amount:{"\b"}
-      <Text
-        style={{
-          fontWeight:"bold",
-          color:"green"
-        }}
-      >
-        
-        ${BidAmount}
-      </Text>
-      </Text>
-      <Text>Status:{"\b"}
-      <Text
-        style={{
-          fontWeight: "bold",
-          color:"blue"
-        }}
-      > {Status}
-       </Text>
-       
-      </Text>
+    <View >
+      <View style={{ }}>
+          <Text style={{ fontWeight: 'bold' }}>Bid Amount</Text>
+          <Text style={{ color: 'green' }}> ${BidAmount}</Text>
+        </View>
+        <View style={{  }}>
+          <Text style={{ fontWeight: 'bold' }}>Bid Status</Text>
+          <Text style={{ color: 'black' }}>{Status}</Text>
+        </View>
     </View>
   );
 };

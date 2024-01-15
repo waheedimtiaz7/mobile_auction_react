@@ -56,9 +56,9 @@ import {
                   <View
                     style={{
                       flexDirection: "row",
-                      height: 150,
-                      width: "80%",
-                      justifyContent: "space-evenly",
+                      height: 100,
+                      width: "100%",
+                      justifyContent: "space-between",
                       alignItems: "center",
                       backgroundColor: "#D0EAF6",
                       padding: 5,
@@ -66,10 +66,7 @@ import {
                       borderRadius: 10,
                     }}
                   >
-                    <Text><Text style={{
-                        fontWeight: "bold",
-                      }}>Device Name:</Text>{item.device_name}</Text>
-                    <Text>Model</Text>
+                    <Text>{item.device_name}</Text>
                     <Text
                       style={{
                         fontWeight: "bold",
@@ -77,6 +74,7 @@ import {
                     >
                       {item.model}
                     </Text>
+                   
                     <Text>
                       <Text
                         style={{

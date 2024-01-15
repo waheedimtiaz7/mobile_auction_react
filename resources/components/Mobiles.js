@@ -104,51 +104,25 @@ const Mobiles = () => {
               style={{
               }}
             >
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 22,
-                }}
-              >
-                {item.device_name}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 18,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: "bold",
-                  }}
-                >
-                  Model::
-                </Text>
-                {"\n"}{item.model}
-              </Text>
-              <Text
-                style={{
-                 
-                }}
-              >
-                <Text
-                  style={{
-                    fontWeight: "bold",
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 17,
-                      fontWeight: "bold",
-                    }}
-                  >
-                    Latest Bid:: {"\b"}
-                    </Text>
-                    ${item.latest_bid?.bid_amount}
-                </Text>
-                
-              </Text>
+              <View style={{
+                width: "98%", alignSelf: "center", borderWidth: 1, borderColor: "black",
+                borderRadius: 5, padding: 10, marginBottom:3,height:115
+              }}>
+                <View style={{ width: "100%" ,marginTop:-10}}>
+                  <Text style={{ fontWeight: 'bold' }}>Device Name</Text>
+                  <Text style={{ width: "100%" , color:'green'}}>{item.device_name}</Text>
+                </View>
+                <View style={{ width: "100%" }}>
+                  <Text style={{ fontWeight: 'bold' }}>Device Model</Text>
+                  <Text style={{ width: "100%" , color:'green'}}>{item.model}</Text>
+                </View>
+                <View style={{ width: "100%" }}>
+                  <Text style={{ fontWeight: 'bold' }}>Latest Bid {"\b"}
+                  <Text style={{ width: "100%" , color:'green'}}>  ${item.latest_bid?.bid_amount}</Text></Text>
+                </View>
+               
+              </View>
+            
               <TouchableOpacity
                 onPress={() =>
                   navigation.navigate("Auction", {

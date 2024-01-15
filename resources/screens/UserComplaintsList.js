@@ -53,20 +53,19 @@ import {
       >
             <View
             style={{
-                flexDirection: "row",
-                alignItems: "center",
+                width:"100%",
+                alignItems:"center"
+                
             }}
             >
             <Text
                 style={{
-                fontSize: 16,
-                marginBottom: 20,
+                fontSize: 25,
+                marginBottom: 15,
                 marginTop: 10,
-                marginLeft: 10,
                 color: "white",
                 fontStyle: "italic",
                 fontWeight: "bold",
-                width: "48%",
                 }}
             >
                 Complaints
@@ -100,16 +99,23 @@ import {
                         <Text
                             style={{
                             fontSize: 16,
-                            fontWeight: "bold",
                             textAlign:'center'
                             }}
                         >
-                            {"\n"}{item.subject}
+                          <Text  style={{
+                          fontWeight: "bold",
+                          fontSize:20
+                        }}>Subject:</Text>
+                            {"\b"} {item.subject}
                         </Text>
                     </View>
                     <View>
                         <Text style={{ fontSize: 14, }} >
-                        {item.details}
+                        <Text style={{
+                          fontWeight: "bold",
+                          fontSize:20
+                        }}> Details:</Text>
+                        {"\b"} {item.details}
                         </Text>
                     </View>
                 </View>

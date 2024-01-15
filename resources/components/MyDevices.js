@@ -73,16 +73,13 @@ import {
                     >
                       {item.model}
                     </Text>
-                    <Text>
                       <Text
                         style={{
                           fontWeight: "bold",
                         }}
                       >
-                        {item.price}
+                        ${item.price}
                       </Text>
-                      /Rs
-                    </Text>
                   </View>
                   <View
                     style={{
