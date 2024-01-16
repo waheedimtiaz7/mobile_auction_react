@@ -89,15 +89,20 @@ const Auction = ({ navigation, route }) => {
             alignSelf: "center",
           }}
         >
-          <Image
-            source={{
-              uri: device.picture,
-            }}
-            style={{
-              height: 200,
-              width: 350,
-            }}
-          />
+          {device.device_images.map((item, key) => (
+              <Image
+              style={{
+                height: 200,
+                width: 350,
+                marginBottom: 10,
+                alignSelf: "center",
+                resizeMode:"cover"
+              }}
+              key={key}
+                source={{uri:item.image_path}}
+              />
+              
+          ))}
         </ScrollView>
 
         <View

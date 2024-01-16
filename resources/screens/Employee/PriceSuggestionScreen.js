@@ -125,19 +125,33 @@ const PriceSuggestionScreen = ({ navigation, route }) => {
             {device.device_name} {device.model}
           </Text>
         </View>
-
-        <Image
-          source={{
-            uri: device.picture,
-          }}
-          style={{
-            height: 150,
-            width: 150,
-            borderRadius: 100,
-            marginBottom: 10,
-            alignSelf: "center"
-          }}
-        />
+        {device.device_images && device.device_images.length>0 &&<ScrollView
+         horizontal
+         showsHorizontalScrollIndicator={false}
+         contentContainerStyle={{
+           alignItems: "center"
+         }}
+         style={{
+           position: "relative",
+           paddingTop: 2,
+           paddingBottom: 8,
+           width: "90%",
+           alignSelf: "center",
+         }}
+        >
+          {device.device_images.map((item, key) => (
+              <Image
+              style={{
+                height: 200,
+                width: 350,
+                marginBottom: 10,
+                alignSelf: "center"
+              }}
+                source={{uri:item.image_path}}
+              />
+              
+          ))}
+        </ScrollView> }
         <View style={{
           width: "90%", alignSelf: "center", borderWidth: 1, borderColor: "white",
           borderRadius: 5, padding: 10, marginBottom: 10
